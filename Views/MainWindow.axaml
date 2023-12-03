@@ -1,0 +1,32 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:voicio.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="750"
+        x:Class="voicio.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="voicio">
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
+	<StackPanel Margin="20">
+		<TextBlock Margin="0 5">Search</TextBlock>
+		<AutoCompleteBox x:Name="animals" FilterMode="StartsWith" />
+	</StackPanel>
+	<DataGrid Margin="20" ItemsSource="{Binding Hints}"
+          IsReadOnly="True"
+          GridLinesVisibility="All"
+          BorderThickness="10" BorderBrush="Gray">
+		<DataGrid.Columns>
+			<DataGridTextColumn Header="Text" Width="*"
+					Binding="{Binding Text}"/>
+			<DataGridTextColumn Header="Comment" Width="*"
+					Binding="{Binding Comment}" />
+			<DataGridTextColumn Header="Tags" Width="*"
+					Binding="{Binding Tags}" />
+		</DataGrid.Columns>
+	</DataGrid>
+</Window>
