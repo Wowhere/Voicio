@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using Microsoft.Data.Sqlite;
 
 namespace voicio.Models
 {
@@ -15,10 +14,10 @@ namespace voicio.Models
 
         public string Comment { get; set; }
 
-        public string? Tags { get; set; }
+        public List<string> Tags { get; set; }
 
-        public Hint(string text, string comment) { 
-            Text = text; Comment = comment;
+        public Hint(int id, string text, string comment, List<string> tags) {
+            Id = id; Text = text; Comment = comment; Tags = tags;
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
-using Tmds.DBus.Protocol;
 
 namespace voicio.Models
 {
@@ -15,38 +14,52 @@ namespace voicio.Models
 
         private SqliteConnection Connection { get; set; }
 
-        //public Dictionary<string, ObservableCollection<Hint>> GetHelp(string search_word, bool fuzzy, List<bool> flags)
-        //{
-        //    Dictionary<string, ObservableCollection<Hint>> search_results = new Dictionary<string, ObservableCollection<Hint>>();
-        //    if (flags[0])
-        //    {
-        //        search_results.Add(new <string, List<string>> { });
-        //        ExecQuery("SELECT shortcuts.id, shortcuts.shortcut, shortcuts.comment, voice_aliases.alias FROM shortcuts LEFT JOIN voice_aliases ON shortcuts.alias_id = voice_aliases.id WHERE shortcuts.shortcut LIKE (?)");
-        //    }
-        //    if (flags[1])
-        //    {
-        //        ExecQuery("SELECT shortcuts.id, shortcuts.shortcut, shortcuts.comment, voice_aliases.alias FROM shortcuts LEFT JOIN voice_aliases ON shortcuts.alias_id = voice_aliases.id WHERE shortcuts.comment LIKE (?)");
-        //    }
-        //    if (flags[2])
-        //    {
-        //        ExecQuery("SELECT shortcuts.id, shortcuts.shortcut, shortcuts.comment, voice_aliases.alias FROM shortcuts INNER JOIN voice_aliases ON shortcuts.alias_id = voice_aliases.id WHERE voice_aliases.alias LIKE (?)");
-        //    }
-        //    return search_results;
-        //}
+        public Dictionary<string, ObservableCollection<Hint>> GetHelp(string searchWord, bool Fuzzy, List<bool> Flags)
+        {
+            Dictionary<string, ObservableCollection<Hint>> Results = new Dictionary<string, ObservableCollection<Hint>>();
+            if (Flags[0])
+            {
+                var foundByText = "SELECT shortcuts.id, shortcuts.shortcut, shortcuts.comment, voice_aliases.alias FROM shortcuts LEFT JOIN voice_aliases ON shortcuts.alias_id = voice_aliases.id WHERE shortcuts.shortcut LIKE $searchWord";
+                Results.Add("Text", ExecQuery(foundByText, searchWord));
+            }
+            if (Flags[1])
+            {
+                var foundByComment = "SELECT shortcuts.id, shortcuts.shortcut, shortcuts.comment, voice_aliases.alias FROM shortcuts LEFT JOIN voice_aliases ON shortcuts.alias_id = voice_aliases.id WHERE shortcuts.comment LIKE $searchWord";
+                Results.Add("Comment", ExecQuery(foundByComment, searchWord));
+            }
+            if (Flags[2])
+            {
+                var foundByTags = "SELECT shortcuts.id, shortcuts.shortcut, shortcuts.comment, voice_aliases.alias FROM shortcuts INNER JOIN voice_aliases ON shortcuts.alias_id = voice_aliases.id WHERE voice_aliases.alias LIKE $searchWord";
+                Results.Add("Tags", ExecQuery(foundByTags, searchWord));
+            }
+            return Results;
+        }
 
-        //private List<string> ExecQuery(string query)
-        //{
-        //    var command = Connection.CreateCommand();
-        //    command.CommandText = query;
-        //    return "";
-        //}
+        private ObservableCollection<Hint> ExecQuery(string query, string searchWord)
+        {
+            var command = Connection.CreateCommand();
+            command.CommandText = query;
+            command.Parameters.AddWithValue("$searchWord", searchWord);
 
-        private 
+            var Hints = new ObservableCollection<Hint>();
 
-        SqliteDataSource(string conn_string="voicio.db")
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    //var name = reader.Get
+                    //Hints.Add(new Hint());
+                    Console.WriteLine($"Hello, {reader.GetString(0)} {reader.GetString(1)} {reader.GetString(2)} {reader.GetString(3)}!");
+                }
+            }
+            return Hints;
+        }
+
+        public SqliteDataSource(string conn_string="voicio.db")
         {
             connection_string = conn_string;
             Connection = new SqliteConnection(connection_string);
+            Connection.Open();
         }
     }
 

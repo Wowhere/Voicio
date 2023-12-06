@@ -12,9 +12,6 @@ namespace voicio.ViewModels
         {
             var hints = new List<Hint>
             {
-                new Hint("ipconfig", "Armstrong"),
-                new Hint("Buzz", "Lightyear"),
-                new Hint("James", "Kirk")
             };
             Hints = new ObservableCollection<Hint>(hints);
         }
