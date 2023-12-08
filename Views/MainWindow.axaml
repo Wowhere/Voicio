@@ -13,11 +13,17 @@
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
 	<StackPanel Margin="20">
-		<AutoCompleteBox x:Name="animals" FilterMode="StartsWith" />
-	<CheckBox IsChecked="True">Text</CheckBox>
+		
+			<AutoCompleteBox x:Name="animals" FilterMode="StartsWith" />
+			<StackPanel Margin="20" Orientation="Horizontal">
+
+				<CheckBox IsChecked="True">Text</CheckBox>
 	<CheckBox IsChecked="True">Comment</CheckBox>
 	<CheckBox IsChecked="True">Tags</CheckBox>
 	<Button>Test</Button>
+	</StackPanel>
+			
+		
 	<DataGrid Margin="20" ItemsSource="{Binding Hints}"
           IsReadOnly="True"
           GridLinesVisibility="All"
@@ -33,5 +39,6 @@
 					Binding="{Binding Tags}" />-->
 		</DataGrid.Columns>
 	</DataGrid>
+	
 	</StackPanel>
 </Window>
