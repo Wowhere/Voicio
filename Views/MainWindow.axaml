@@ -3,31 +3,34 @@
         xmlns:vm="using:voicio.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="750"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600" Width="800" Height="600"
         x:Class="voicio.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="voicio">
-
 	<Design.DataContext>
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
-	<StackPanel Margin="20">
-		
-			<AutoCompleteBox x:Name="animals" FilterMode="StartsWith" />
-			<StackPanel Margin="20" Orientation="Horizontal">
-
-				<CheckBox IsChecked="True">Text</CheckBox>
-	<CheckBox IsChecked="True">Comment</CheckBox>
-	<CheckBox IsChecked="True">Tags</CheckBox>
-	<Button>Test</Button>
+	<StackPanel>
+		<DockPanel>
+	<AutoCompleteBox x:Name="animals" FilterMode="StartsWith" Width="600" Watermark="Input..." Margin="10,10,10,0"/>
+	<RadioButton GroupName="Second Group" Content="Fuzzy" Margin="10,10,10,0"/>
+	<RadioButton GroupName="Second Group" Content="Strict" Margin="10,10,10,0"/>
+		</DockPanel>
+	<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+	<CheckBox IsChecked="True" Margin="20,10,20,10">Text</CheckBox>
+	<CheckBox IsChecked="True" Margin="20,0,20,0">Comment</CheckBox>
+	<CheckBox IsChecked="True" Margin="20,0,20,0">Tags</CheckBox>
 	</StackPanel>
-			
-		
-	<DataGrid Margin="20" ItemsSource="{Binding Hints}"
+		<DockPanel HorizontalAlignment="Stretch">
+			<Button Width="400" Height="40" HorizontalContentAlignment="Center">Search</Button>
+			<Button Height="40" HorizontalContentAlignment="Center">Add new</Button>
+			<Button Height="40" HorizontalContentAlignment="Center">Editing off</Button>
+		</DockPanel>
+	<DataGrid ItemsSource="{Binding Hints}"
           IsReadOnly="True"
           GridLinesVisibility="All"
-          BorderThickness="10" BorderBrush="Gray">
+          BorderThickness="5" BorderBrush="Gray">
 		<DataGrid.Columns>
 			<DataGridTextColumn Header="Id" Width="*"
 					Binding="{Binding Id}" IsVisible="False"/>
