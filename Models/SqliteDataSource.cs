@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+//using SQLitePCL;
 
 namespace voicio.Models
 {
@@ -55,7 +56,7 @@ namespace voicio.Models
             return Hints;
         }
 
-        public SqliteDataSource(string conn_string="voicio.db")
+        public SqliteDataSource(string conn_string= "Data Source=voicio.db;Cache=Shared")
         {
             connection_string = conn_string;
             Connection = new SqliteConnection(connection_string);
