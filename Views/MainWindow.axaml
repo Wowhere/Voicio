@@ -38,8 +38,8 @@
 					Binding="{Binding Text}"/>
 			<DataGridTextColumn Header="Comment" Width="*"
 					Binding="{Binding Comment}" />
-			<!--<DataGridTextColumn Header="Tags" Width="*"
-					Binding="{Binding Tags}" />-->
+			<!--<DataGridTemplateColumn Header="Tags" Width="*"
+					Binding="{Binding Tags}" CellTemplate="{Binding }" CellEditingTemplate="{Binding }"/>-->
 		</DataGrid.Columns>
 	</DataGrid>
 	

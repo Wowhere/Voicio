@@ -10,9 +10,9 @@ namespace voicio.ViewModels
     {
         public ObservableCollection<Hint> Hints { get; }
 
-        private bool _IsTextSearch;
+        private bool _IsTextSearch = true;
 
-        private bool _IsCommentSearch;
+        private bool _IsCommentSearch = true;
 
         private bool _IsTagSearch;
 

@@ -49,7 +49,7 @@ namespace voicio.Models
                 while (reader.Read())
                 {
                     //var name = reader.Get
-                    //Hints.Add(new Hint());
+                    Hints.Add(new Hint(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
                     Console.WriteLine($"Hello, {reader.GetString(0)} {reader.GetString(1)} {reader.GetString(2)} {reader.GetString(3)}!");
                 }
             }
