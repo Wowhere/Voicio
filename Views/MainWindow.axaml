@@ -3,29 +3,51 @@
         xmlns:vm="using:voicio.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600" Width="800" Height="600"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600" Width="800" Height="600" MinWidth="720" MinHeight="200"
         x:Class="voicio.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="voicio">
+	<Window.Styles>
+		<Style Selector="ToggleButton.SearchType">
+			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="Orange"/>
+				<Setter Property="Content" Value="Fuzzy"/>
+			</Style>
+			<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="OrangeRed"/>
+				<Setter Property="Content" Value="Strict"/>
+			</Style>
+		</Style>
+		<Style Selector="ToggleButton.EditingMode">
+			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="Gray"/>
+				<Setter Property="Content" Value="Editing off"/>
+			</Style>
+			<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="Red"/>
+				<Setter Property="Content" Value="Editing on"/>
+			</Style>
+		</Style>
+	</Window.Styles>
 	<Design.DataContext>
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
 	<StackPanel>
-		<DockPanel>
+	<DockPanel>
 	<TextBox x:Name="searchInput" Width="600" Watermark="Input..." Margin="10,10,10,0"/>
-	<RadioButton GroupName="Second Group" Content="Fuzzy" Margin="10,10,10,0"/>
-	<RadioButton GroupName="Second Group" Content="Strict" Margin="10,10,10,0"/>
-		</DockPanel>
+	<ToggleButton Command="" Classes="SearchType" Width="80" Height="30" Margin="10,10,10,0">
+	</ToggleButton>
+	</DockPanel>
 	<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
 	<CheckBox IsChecked="{Binding IsTextSearch}" Margin="20,10,20,10">Text</CheckBox>
 	<CheckBox IsChecked="{Binding IsCommentSearch}" Margin="20,0,20,0">Comment</CheckBox>
 	<CheckBox IsChecked="{Binding IsTagSearch}" Margin="20,0,20,0">Tags</CheckBox>
 	</StackPanel>
 		<DockPanel HorizontalAlignment="Stretch">
-			<Button Width="400" Height="40" HorizontalContentAlignment="Center" Command="{Binding StartSearchCommand}" Content="Search"></Button>
-			<Button Height="40" HorizontalContentAlignment="Center" Content="Add new"></Button>
-			<Button Height="40" HorizontalContentAlignment="Center" Content="Editing"></Button>
+			<Button Width="400" Height="40" HorizontalContentAlignment="Center" Command="{Binding StartSearchCommand}" Content="Search" Margin="20,10,20,10" Background="RoyalBlue"></Button>
+			<Button Height="40" HorizontalContentAlignment="Center" Content="Add new" Margin="20,10,20,10" Background="MediumSeaGreen"></Button>
+			<ToggleButton Classes="EditingMode" Height="40" HorizontalContentAlignment="Center" Margin="20,10,20,10"></ToggleButton>
 		</DockPanel>
 	<DataGrid ItemsSource="{Binding Hints}"
           IsReadOnly="True"

@@ -16,7 +16,9 @@ namespace voicio.ViewModels
 
         private bool _IsTagSearch;
 
-        private bool _IsFuzzy;
+        private bool _IsFuzzy = true;
+
+        private bool _IsGridReadOnly = true;
         public bool IsTextSearch {
             get => _IsTextSearch;
             set => this.RaiseAndSetIfChanged(ref _IsTextSearch, value);
@@ -30,14 +32,29 @@ namespace voicio.ViewModels
             set => this.RaiseAndSetIfChanged(ref _IsTagSearch, value);
         }
 
+        public bool FuzzyButtonChecked { get; set; }
         public bool IsFuzzy { get; set; }
 
+        public bool IsGridReadOnly { get; set; }
+        public bool IsReadOnly { get; set; }
         public SqliteDataSource DataSource { get; set; }
 
         public ICommand StartSearchCommand { get; }
+
+        public ICommand SetSearchTypeCommand { get; }
+
+        private void SetSearchType()
+        {
+
+        }
+        private void StartSearch(string query)
+        {
+            
+        }
         public MainWindowViewModel()
         {
             StartSearchCommand = ReactiveCommand.Create<string>(StartSearch);
+            SetSearchTypeCommand = ReactiveCommand.Create(SetSearchType);
             var hints = new List<Hint>
             {
             };
@@ -45,12 +62,5 @@ namespace voicio.ViewModels
             Hints = new ObservableCollection<Hint>(hints);
             
         }
-
-        private void StartSearch(string query)
-        {
-            var SearchFlags = new List<bool> { _IsTextSearch, _IsCommentSearch, _IsTagSearch }; 
-            DataSource.GetHelp(query, true, SearchFlags);
-
-        }
-    }
+}
 }
