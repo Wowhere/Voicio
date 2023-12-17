@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
-//using SQLitePCL;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace voicio.Models
 {
