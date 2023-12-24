@@ -3,6 +3,7 @@ using voicio.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Linq;
 
 namespace voicio.ViewModels
 {
@@ -37,7 +38,7 @@ namespace voicio.ViewModels
 
         public bool IsGridReadOnly { get; set; }
         public bool IsReadOnly { get; set; }
-        public SqliteDataSource DataSource { get; set; }
+        //public SqliteDataSource DataSource { get; set; }
 
         public ICommand StartSearchCommand { get; }
 
@@ -49,17 +50,18 @@ namespace voicio.ViewModels
         }
         private void StartSearch(string query)
         {
+            using (var DataSource = new HelpContext())
+            {
+                var hints = DataSource.Hints.Where(b => b.HintText.Contains(query)).ToList();
+            }
             
         }
         public MainWindowViewModel()
         {
             StartSearchCommand = ReactiveCommand.Create<string>(StartSearch);
             SetSearchTypeCommand = ReactiveCommand.Create(SetSearchType);
-            var hints = new List<Hint>
-            {
-            };
-            DataSource = new SqliteDataSource();
-            Hints = new ObservableCollection<Hint>(hints);
+            //var hints = new List<Hint> { };
+            Hints = new ObservableCollection<Hint> { };
             
         }
 }

@@ -53,7 +53,7 @@ namespace voicio.Models
             optionsBuilder.UseSqlite($"Data Source={DbPath}");
         }
 
-        HelpContext()
+        public HelpContext()
         {
             var path = AppDomain.CurrentDomain.BaseDirectory;
             DbPath = System.IO.Path.Join(path, "helper.db");
