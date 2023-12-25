@@ -57,7 +57,7 @@
 			<DataGridTextColumn Header="Id" Width="*"
 					Binding="{Binding Id}" IsVisible="False"/>
 			<DataGridTextColumn Header="Text" Width="*"
-					Binding="{Binding Text}"/>
+					Binding="{Binding HintText}"/>
 			<DataGridTextColumn Header="Comment" Width="*"
 					Binding="{Binding Comment}" />
 			<!--<DataGridTemplateColumn Header="Tags" Width="*"

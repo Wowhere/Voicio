@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Linq;
+using Avalonia;
 
 namespace voicio.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public ObservableCollection<Hint> Hints { get; }
+        public ObservableCollection<Hint> Hints { get; set; }
 
         private bool _IsTextSearch = true;
 
@@ -53,6 +54,7 @@ namespace voicio.ViewModels
             using (var DataSource = new HelpContext())
             {
                 var hints = DataSource.Hints.Where(b => b.HintText.Contains(query)).ToList();
+                Hints = new ObservableCollection<Hint>(hints);
             }
             
         }
@@ -61,8 +63,8 @@ namespace voicio.ViewModels
             StartSearchCommand = ReactiveCommand.Create<string>(StartSearch);
             SetSearchTypeCommand = ReactiveCommand.Create(SetSearchType);
             //var hints = new List<Hint> { };
-            Hints = new ObservableCollection<Hint> { };
-            
+            //Hints = new ObservableCollection<Hint>();
+
         }
 }
 }

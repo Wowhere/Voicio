@@ -11,24 +11,36 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Data.Entity.Hierarchy;
 using Avalonia.Controls;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace voicio.Models
 {
     public class Tag
     {
+        [Key, Required]
         public int Id { get; set; }
         public string TagText { get; set; }
         public List<HintTag> HintTag { get; } = new();
     }
     public class Hint
     {
+        [Key, Required]
         public int Id { get; set; }
         public string HintText { get; set; }
         public int Comment { get; set; }
         public List<HintTag> HintTag { get; } = new();
+
+        public Hint(int Id, string hintText, int comment)
+        {
+            Id = Id;
+            HintText = hintText;
+            Comment = comment;
+        }
     }
     public class HintTag
     {
+        public int Id { get; set; }
         public int TagId { get; set; }
         public int HintId { get; set; }
         public Tag Tag { get; set; } = null!;
@@ -41,12 +53,23 @@ namespace voicio.Models
         public string DbPath { get; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Hint>()
-                .Property(b => b.HintTag)
-                .HasDefaultValue(null);
-            modelBuilder.Entity<Tag>()
-                .Property(b => b.HintTag)
-                .HasDefaultValue(null);
+            //modelBuilder.Entity<Hint>().
+            //    HasMany(b => b.HintTag).
+            //    WithOne(b => b.Hint).
+            //    HasForeignKey(b => b.HintId).
+            //    HasPrincipalKey(b => b.Id);
+            //modelBuilder.Entity<Tag>().
+            //    HasMany(b => b.HintTag).
+            //    WithOne(b => b.Tag).
+            //    HasForeignKey(b => b.TagId).
+            //    HasPrincipalKey(b => b.Id);
+
+            //modelBuilder.Entity<Hint>()
+            //    .HasMany(e => e.HintTag)
+            //    .WithMany(e => e.Posts)
+            //    .UsingEntity<PostTag>();
+
+            base.OnModelCreating(modelBuilder);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
