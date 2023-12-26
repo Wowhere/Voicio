@@ -35,7 +35,7 @@
 	</Design.DataContext>
 	<StackPanel>
 	<DockPanel>
-	<TextBox x:Name="searchInput" Width="600" Watermark="Input..." Margin="10,10,10,0"/>
+	<TextBox x:Name="searchInput" Text="{Binding Query}" Width="600" Watermark="Input..." Margin="10,10,10,0"/>
 	<ToggleButton Command="" Classes="SearchType" Width="80" Height="30" Margin="10,10,10,0">
 	</ToggleButton>
 	</DockPanel>
@@ -49,7 +49,7 @@
 			<Button Height="40" HorizontalContentAlignment="Center" Content="Add new" Margin="20,10,20,10" Background="MediumSeaGreen"></Button>
 			<ToggleButton Classes="EditingMode" Height="40" HorizontalContentAlignment="Center" Margin="20,10,20,10"></ToggleButton>
 		</DockPanel>
-	<DataGrid ItemsSource="{Binding Hints}"
+	<DataGrid x:Name="resultGrid" ItemsSource="{Binding Hints}"
           IsReadOnly="True"
           GridLinesVisibility="All"
           BorderThickness="5" BorderBrush="Gray">

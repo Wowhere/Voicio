@@ -28,10 +28,10 @@ namespace voicio.Models
         [Key, Required]
         public int Id { get; set; }
         public string HintText { get; set; }
-        public int Comment { get; set; }
+        public string Comment { get; set; }
         public List<HintTag> HintTag { get; } = new();
 
-        public Hint(int Id, string hintText, int comment)
+        public Hint(int Id, string hintText, string comment)
         {
             Id = Id;
             HintText = hintText;
