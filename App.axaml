@@ -11,7 +11,28 @@
   
     <Application.Styles>
 		<FluentTheme/>
-		
+		<StyleInclude Source="avares://Avalonia.Controls.TreeDataGrid/Themes/Fluent.axaml"/>
 		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
     </Application.Styles>
+	<TrayIcon.Icons>
+		<TrayIcons>
+			<TrayIcon Icon="/Assets/avalonia-logo.ico"
+					  ToolTipText="App">
+				<TrayIcon.Menu>
+					<NativeMenu>
+						<NativeMenuItem Header="Open">
+						</NativeMenuItem>
+						<NativeMenuItem Header="Voice search">
+						</NativeMenuItem>
+						<NativeMenuItem Header="Add hint">
+						</NativeMenuItem>
+						<NativeMenuItem Header="Settings">
+						</NativeMenuItem>
+						<NativeMenuItem Header="Exit">
+						</NativeMenuItem>
+					</NativeMenu>
+				</TrayIcon.Menu>
+			</TrayIcon>
+		</TrayIcons>
+	</TrayIcon.Icons>
 </Application>

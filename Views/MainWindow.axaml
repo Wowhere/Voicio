@@ -7,7 +7,9 @@
         x:Class="voicio.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="voicio">
+        Title="voicio"
+		TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent">
 	<Window.Styles>
 		<Style Selector="ToggleButton.SearchType">
 			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
@@ -34,6 +36,15 @@
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
 	<StackPanel>
+		<ExperimentalAcrylicBorder IsHitTestVisible="False">
+			<ExperimentalAcrylicBorder.Material>
+				<ExperimentalAcrylicMaterial
+					BackgroundSource="Digger"
+					TintColor="Black"
+					TintOpacity="1"
+					MaterialOpacity="0.65" />
+			</ExperimentalAcrylicBorder.Material>
+		</ExperimentalAcrylicBorder>
 	<DockPanel>
 	<TextBox x:Name="searchInput" Text="{Binding Query}" Width="600" Watermark="Input..." Margin="10,10,10,0"/>
 	<ToggleButton Command="" Classes="SearchType" Width="80" Height="30" Margin="10,10,10,0">
@@ -45,14 +56,16 @@
 	<CheckBox IsChecked="{Binding IsTagSearch}" Margin="20,0,20,0">Tags</CheckBox>
 	</StackPanel>
 		<DockPanel HorizontalAlignment="Stretch">
-			<Button Width="400" Height="40" HorizontalContentAlignment="Center" Command="{Binding StartSearchCommand}" Content="Search" Margin="20,10,20,10" Background="RoyalBlue"></Button>
-			<Button Height="40" HorizontalContentAlignment="Center" Content="Add new" Margin="20,10,20,10" Background="MediumSeaGreen"></Button>
-			<ToggleButton Classes="EditingMode" Height="40" HorizontalContentAlignment="Center" Margin="20,10,20,10"></ToggleButton>
+			<Button Width="360" Height="40" HorizontalContentAlignment="Center" Command="{Binding StartSearchCommand}" Content="Search" Margin="15,10,20,10" Background="RoyalBlue"></Button>
+			<Button Height="40" HorizontalContentAlignment="Center" Content="Voice Search" Margin="15,10,20,10" Background="BlueViolet"></Button>
+			<Button Height="40" HorizontalContentAlignment="Center" Content="Add hint" Margin="20,10,20,10" Background="MediumSeaGreen"></Button>
+			<ToggleButton Width="120" Classes="EditingMode" Height="40" HorizontalContentAlignment="Center" Margin="20,10,20,10"></ToggleButton>
 		</DockPanel>
 	<DataGrid x:Name="resultGrid" ItemsSource="{Binding Hints}"
           IsReadOnly="True"
+			  AutoGenerateColumns="False"
           GridLinesVisibility="All"
-          BorderThickness="5" BorderBrush="Gray">
+          BorderThickness="2.5" BorderBrush="Gray" SelectionMode="Extended" CanUserResizeColumns="True">
 		<DataGrid.Columns>
 			<DataGridTextColumn Header="Id" Width="*"
 					Binding="{Binding Id}" IsVisible="False"/>
