@@ -6,6 +6,8 @@ using System.Windows.Input;
 using System.Linq;
 using Avalonia;
 using System;
+using Avalonia.Controls;
+using Avalonia.Controls.Models.TreeDataGrid;
 
 namespace voicio.ViewModels
 {
@@ -16,6 +18,15 @@ namespace voicio.ViewModels
             get => _hints; 
             set => this.RaiseAndSetIfChanged(ref _hints, value);
         }
+
+        private FlatTreeDataGridSource<Hint> _source;
+
+        
+        public FlatTreeDataGridSource<Hint> Source { 
+            get => _source;
+            set => this.RaiseAndSetIfChanged(ref _source, value);
+        }
+
         private string _query;
         public string Query
         {
@@ -67,6 +78,15 @@ namespace voicio.ViewModels
             {
                 var hints = DataSource.Hints.Where(b => b.HintText.Contains(Query)).ToList();
                 Hints = new ObservableCollection<Hint>(hints);
+                Source = new FlatTreeDataGridSource<Hint>(Hints)
+                {
+                    Columns =
+                {
+                    new TextColumn<Hint, int>("Id", x => x.Id),
+                    new TextColumn<Hint, string>("Text", x => x.HintText),
+                    new TextColumn<Hint, string>("Comment", x => x.Comment)
+                },
+                };
             }
             
         }
@@ -74,6 +94,15 @@ namespace voicio.ViewModels
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
             SetSearchTypeCommand = ReactiveCommand.Create(SetSearchType);
+            //Source = new FlatTreeDataGridSource<Hint>(Hints) {
+            //Columns =
+            //    {
+            //        new TextColumn<Hint, int>("Id", x => x.Id),
+            //        new TextColumn<Hint, string>("Text", x => x.HintText),
+            //        new TextColumn<Hint, string>("Comment", x => x.Comment)
+            //    },
+            //};
+            //Source.ToString();
             //var h = new List<Hint> { new Hint(1, "test", "comment") };
             //Hints = new ObservableCollection<Hint>(h);
         }

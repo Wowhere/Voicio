@@ -61,22 +61,19 @@
 			<Button Height="40" HorizontalContentAlignment="Center" Content="Add hint" Margin="20,10,20,10" Background="MediumSeaGreen"></Button>
 			<ToggleButton Width="120" Classes="EditingMode" Height="40" HorizontalContentAlignment="Center" Margin="20,10,20,10"></ToggleButton>
 		</DockPanel>
-	<DataGrid x:Name="resultGrid" ItemsSource="{Binding Hints}"
-          IsReadOnly="True"
-			  AutoGenerateColumns="False"
-          GridLinesVisibility="All"
-          BorderThickness="2.5" BorderBrush="Gray" SelectionMode="Extended" CanUserResizeColumns="True">
-		<DataGrid.Columns>
+	<TreeDataGrid x:Name="resultGrid" Source="{Binding Source}"
+          BorderThickness="2.5" BorderBrush="Gray" CanUserResizeColumns="True">
+		<!--<DataGrid.Columns>
 			<DataGridTextColumn Header="Id" Width="*"
 					Binding="{Binding Id}" IsVisible="False"/>
 			<DataGridTextColumn Header="Text" Width="*"
 					Binding="{Binding HintText}"/>
 			<DataGridTextColumn Header="Comment" Width="*"
 					Binding="{Binding Comment}" />
-			<!--<DataGridTemplateColumn Header="Tags" Width="*"
-					Binding="{Binding Tags}" CellTemplate="{Binding }" CellEditingTemplate="{Binding }"/>-->
-		</DataGrid.Columns>
-	</DataGrid>
+			<DataGridTemplateColumn Header="Tags" Width="*"
+					Binding="{Binding Tags}" CellTemplate="{Binding }" CellEditingTemplate="{Binding }"/>
+		</DataGrid.Columns>-->
+	</TreeDataGrid>
 	
 	</StackPanel>
 </Window>
