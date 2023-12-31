@@ -8,6 +8,8 @@ using Avalonia;
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
+//using System.Speech;
+using Avalonia.Controls.Selection;
 
 namespace voicio.ViewModels
 {
@@ -83,10 +85,12 @@ namespace voicio.ViewModels
                     Columns =
                 {
                     new TextColumn<Hint, int>("Id", x => x.Id),
-                    new TextColumn<Hint, string>("Text", x => x.HintText),
+                    new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v),
                     new TextColumn<Hint, string>("Comment", x => x.Comment)
                 },
                 };
+                Source.Selection = new TreeDataGridCellSelectionModel<Hint>(Source);
+
             }
             
         }
@@ -94,6 +98,7 @@ namespace voicio.ViewModels
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
             SetSearchTypeCommand = ReactiveCommand.Create(SetSearchType);
+            
             //Source = new FlatTreeDataGridSource<Hint>(Hints) {
             //Columns =
             //    {
