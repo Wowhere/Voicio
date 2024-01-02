@@ -6,19 +6,31 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600" Width="800" Height="600" MinWidth="720" MinHeight="200"
         x:Class="voicio.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+		Name="HintWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="voicio"
 		TransparencyLevelHint="AcrylicBlur"
-        Background="Transparent">
+        Background="Transparent" Topmost="{Binding IsPinnedWindow}">
 	<Window.Styles>
-		<Style Selector="ToggleButton.SearchType">
+		<Style Selector="ToggleButton.Pin">
 			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Background" Value="Orange"/>
-				<Setter Property="Content" Value="Fuzzy"/>
+				<Setter Property="Background" Value="Aqua"/>
+				<Setter Property="Content" Value="Unpin"/>
 			</Style>
 			<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="Cyan"/>
+				<Setter Property="Content" Value="Pin"/>
+			</Style>
+		</Style>
+		<Style Selector="ToggleButton.SearchType">
+			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
 				<Setter Property="Background" Value="OrangeRed"/>
 				<Setter Property="Content" Value="Strict"/>
+			</Style>
+			<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="Orange"/>
+				<Setter Property="Content" Value="Fuzzy"/>
+
 			</Style>
 		</Style>
 		<Style Selector="ToggleButton.EditingMode">
@@ -47,7 +59,9 @@
 		</ExperimentalAcrylicBorder>
 	<DockPanel>
 	<TextBox x:Name="searchInput" Text="{Binding Query}" Width="600" Watermark="Input..." Margin="10,10,10,0"/>
-	<ToggleButton Command="" Classes="SearchType" Width="80" Height="30" Margin="10,10,10,0">
+	<ToggleButton IsChecked="{Binding IsFuzzy, Mode = TwoWay}" Classes="SearchType" Width="80" Height="30" Margin="10,10,10,0">
+	</ToggleButton>
+	<ToggleButton IsChecked="{Binding IsPinnedWindow, Mode = TwoWay}" Classes="Pin" Width="60" Height="30" Margin="10,10,10,0">
 	</ToggleButton>
 	</DockPanel>
 	<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
@@ -63,17 +77,6 @@
 		</DockPanel>
 	<TreeDataGrid x:Name="resultGrid" Source="{Binding Source}"
           BorderThickness="2.5" BorderBrush="Gray" CanUserResizeColumns="True">
-		<!--<DataGrid.Columns>
-			<DataGridTextColumn Header="Id" Width="*"
-					Binding="{Binding Id}" IsVisible="False"/>
-			<DataGridTextColumn Header="Text" Width="*"
-					Binding="{Binding HintText}"/>
-			<DataGridTextColumn Header="Comment" Width="*"
-					Binding="{Binding Comment}" />
-			<DataGridTemplateColumn Header="Tags" Width="*"
-					Binding="{Binding Tags}" CellTemplate="{Binding }" CellEditingTemplate="{Binding }"/>
-		</DataGrid.Columns>-->
 	</TreeDataGrid>
-	
 	</StackPanel>
 </Window>

@@ -23,7 +23,6 @@ namespace voicio.ViewModels
 
         private FlatTreeDataGridSource<Hint> _source;
 
-        
         public FlatTreeDataGridSource<Hint> Source { 
             get => _source;
             set => this.RaiseAndSetIfChanged(ref _source, value);
@@ -34,51 +33,62 @@ namespace voicio.ViewModels
         {
             get => _query;
             set => this.RaiseAndSetIfChanged(ref _query, value);
+        } 
 
+        private bool _IsPinnedWindow = false;
+        public bool IsPinnedWindow { 
+            get => _IsPinnedWindow; 
+            set => this.RaiseAndSetIfChanged(ref _IsPinnedWindow, value); 
         }
 
         private bool _IsTextSearch = true;
 
         private bool _IsCommentSearch = true;
 
-        private bool _IsTagSearch;
+        private bool _IsTagSearch = true;
 
-        private bool _IsFuzzy = true;
-
-        private bool _IsGridReadOnly = true;
-        public bool IsTextSearch {
+        public bool IsTextSearch
+        {
             get => _IsTextSearch;
             set => this.RaiseAndSetIfChanged(ref _IsTextSearch, value);
         }
-        public bool IsCommentSearch {
+        public bool IsCommentSearch
+        {
             get => _IsCommentSearch;
             set => this.RaiseAndSetIfChanged(ref _IsCommentSearch, value);
         }
-        public bool IsTagSearch {
+        public bool IsTagSearch
+        {
             get => _IsTagSearch;
             set => this.RaiseAndSetIfChanged(ref _IsTagSearch, value);
         }
 
-        public bool FuzzyButtonChecked { get; set; }
-        public bool IsFuzzy { get; set; }
+        private bool _IsFuzzy = false;
+        public bool IsFuzzy { 
+            get => _IsFuzzy; 
+            set => this.RaiseAndSetIfChanged(ref _IsFuzzy, value); 
+        }
 
+        private bool _IsGridReadOnly = true;
+        
         public bool IsGridReadOnly { get; set; }
-        public bool IsReadOnly { get; set; }
-        //public SqliteDataSource DataSource { get; set; }
 
         public ICommand StartSearchCommand { get; }
 
         public ICommand SetSearchTypeCommand { get; }
 
-        private void SetSearchType()
-        {
-
-        }
         public void StartSearch()
         {
             using (var DataSource = new HelpContext())
             {
-                var hints = DataSource.Hints.Where(b => b.HintText.Contains(Query)).ToList();
+                List<Hint> hints;
+                if (IsFuzzy)
+                {
+                    hints = DataSource.Hints.Where(b => b.HintText.Contains(Query)).ToList();
+                } else
+                {
+                    hints = DataSource.Hints.Where(b => b.HintText == Query).ToList();
+                }
                 Hints = new ObservableCollection<Hint>(hints);
                 Source = new FlatTreeDataGridSource<Hint>(Hints)
                 {
@@ -86,7 +96,7 @@ namespace voicio.ViewModels
                 {
                     new TextColumn<Hint, int>("Id", x => x.Id),
                     new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v),
-                    new TextColumn<Hint, string>("Comment", x => x.Comment)
+                    new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v)
                 },
                 };
                 Source.Selection = new TreeDataGridCellSelectionModel<Hint>(Source);
@@ -97,19 +107,6 @@ namespace voicio.ViewModels
         public MainWindowViewModel()
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
-            SetSearchTypeCommand = ReactiveCommand.Create(SetSearchType);
-            
-            //Source = new FlatTreeDataGridSource<Hint>(Hints) {
-            //Columns =
-            //    {
-            //        new TextColumn<Hint, int>("Id", x => x.Id),
-            //        new TextColumn<Hint, string>("Text", x => x.HintText),
-            //        new TextColumn<Hint, string>("Comment", x => x.Comment)
-            //    },
-            //};
-            //Source.ToString();
-            //var h = new List<Hint> { new Hint(1, "test", "comment") };
-            //Hints = new ObservableCollection<Hint>(h);
         }
 }
 }

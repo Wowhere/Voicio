@@ -30,7 +30,6 @@ namespace voicio.Models
         public string HintText { get; set; }
         public string Comment { get; set; }
         public List<HintTag> HintTag { get; } = new();
-
         public Hint(int Id, string hintText, string comment)
         {
             Id = Id;
@@ -51,26 +50,7 @@ namespace voicio.Models
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Hint> Hints { get; set; }
         public string DbPath { get; }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            //modelBuilder.Entity<Hint>().
-            //    HasMany(b => b.HintTag).
-            //    WithOne(b => b.Hint).
-            //    HasForeignKey(b => b.HintId).
-            //    HasPrincipalKey(b => b.Id);
-            //modelBuilder.Entity<Tag>().
-            //    HasMany(b => b.HintTag).
-            //    WithOne(b => b.Tag).
-            //    HasForeignKey(b => b.TagId).
-            //    HasPrincipalKey(b => b.Id);
 
-            //modelBuilder.Entity<Hint>()
-            //    .HasMany(e => e.HintTag)
-            //    .WithMany(e => e.Posts)
-            //    .UsingEntity<PostTag>();
-
-            base.OnModelCreating(modelBuilder);
-        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite($"Data Source={DbPath}");
