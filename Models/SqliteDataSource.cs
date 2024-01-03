@@ -30,9 +30,9 @@ namespace voicio.Models
         public string HintText { get; set; }
         public string Comment { get; set; }
         public List<HintTag> HintTag { get; } = new();
-        public Hint(int Id, string hintText, string comment)
+        public Hint(int id, string hintText, string comment)
         {
-            Id = Id;
+            Id = id;
             HintText = hintText;
             Comment = comment;
         }

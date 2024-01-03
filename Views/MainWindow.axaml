@@ -3,32 +3,48 @@
         xmlns:vm="using:voicio.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600" Width="800" Height="600" MinWidth="720" MinHeight="200"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600" Width="800" Height="600" MinWidth="800" MinHeight="240"
         x:Class="voicio.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
 		Name="HintWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="voicio"
-		TransparencyLevelHint="AcrylicBlur"
-        Background="Transparent" Topmost="{Binding IsPinnedWindow}">
+		Background="#121212"
+        Topmost="{Binding IsPinnedWindow}"
+		WindowStartupLocation="CenterScreen"
+		ExtendClientAreaToDecorationsHint="True"
+		ExtendClientAreaTitleBarHeightHint="-1"
+		>	
+	<Window.KeyBindings>
+		<KeyBinding Gesture="CTRL+N"
+					Command=""></KeyBinding>
+	</Window.KeyBindings>
 	<Window.Styles>
+		<Style Selector="Button">
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+		</Style>
+		<Style Selector="ToggleButton">
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+		</Style>
 		<Style Selector="ToggleButton.Pin">
-			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Background" Value="Aqua"/>
-				<Setter Property="Content" Value="Unpin"/>
+			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">		
+				<Setter Property="Content" Value="No pin"/>
+				<Setter Property="Background" Value="Gray"/>
 			</Style>
 			<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Background" Value="Cyan"/>
 				<Setter Property="Content" Value="Pin"/>
+				<Setter Property="Background" Value="RoyalBlue"/>
 			</Style>
 		</Style>
 		<Style Selector="ToggleButton.SearchType">
 			<Style Selector="^:unchecked ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Background" Value="OrangeRed"/>
+				<Setter Property="Background" Value="#FFFF6B14"/>
 				<Setter Property="Content" Value="Strict"/>
 			</Style>
 			<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Background" Value="Orange"/>
+				<Setter Property="Background" Value="#FFFF6B14"/>
 				<Setter Property="Content" Value="Fuzzy"/>
 
 			</Style>
@@ -39,7 +55,7 @@
 				<Setter Property="Content" Value="Editing off"/>
 			</Style>
 			<Style Selector="^:checked ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Background" Value="Red"/>
+				<Setter Property="Background" Value="#FFFF6B14"/>
 				<Setter Property="Content" Value="Editing on"/>
 			</Style>
 		</Style>
@@ -48,20 +64,12 @@
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
 	<StackPanel>
-		<ExperimentalAcrylicBorder IsHitTestVisible="False">
-			<ExperimentalAcrylicBorder.Material>
-				<ExperimentalAcrylicMaterial
-					BackgroundSource="Digger"
-					TintColor="Black"
-					TintOpacity="1"
-					MaterialOpacity="0.65" />
-			</ExperimentalAcrylicBorder.Material>
-		</ExperimentalAcrylicBorder>
+	<!--<Label Margin="10,5,10,0" BorderBrush="White">Voicio</Label>-->
 	<DockPanel>
-	<TextBox x:Name="searchInput" Text="{Binding Query}" Width="600" Watermark="Input..." Margin="10,10,10,0"/>
-	<ToggleButton IsChecked="{Binding IsFuzzy, Mode = TwoWay}" Classes="SearchType" Width="80" Height="30" Margin="10,10,10,0">
+	<TextBox x:Name="searchInput" Text="{Binding Query}" Width="600" Watermark="Input..." Margin="10,40,10,0"/>
+	<ToggleButton IsChecked="{Binding IsFuzzy, Mode = TwoWay}" Classes="SearchType" Width="80" Height="30" Margin="10,40,10,0">
 	</ToggleButton>
-	<ToggleButton IsChecked="{Binding IsPinnedWindow, Mode = TwoWay}" Classes="Pin" Width="60" Height="30" Margin="10,10,10,0">
+	<ToggleButton IsChecked="{Binding IsPinnedWindow, Mode = TwoWay}" Classes="Pin" Width="60" Height="30" Margin="10,40,10,0">
 	</ToggleButton>
 	</DockPanel>
 	<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
@@ -70,13 +78,14 @@
 	<CheckBox IsChecked="{Binding IsTagSearch}" Margin="20,0,20,0">Tags</CheckBox>
 	</StackPanel>
 		<DockPanel HorizontalAlignment="Stretch">
-			<Button Width="360" Height="40" HorizontalContentAlignment="Center" Command="{Binding StartSearchCommand}" Content="Search" Margin="15,10,20,10" Background="RoyalBlue"></Button>
-			<Button Height="40" HorizontalContentAlignment="Center" Content="Voice Search" Margin="15,10,20,10" Background="BlueViolet"></Button>
-			<Button Height="40" HorizontalContentAlignment="Center" Content="Add hint" Margin="20,10,20,10" Background="MediumSeaGreen"></Button>
-			<ToggleButton Width="120" Classes="EditingMode" Height="40" HorizontalContentAlignment="Center" Margin="20,10,20,10"></ToggleButton>
+			<Button Width="340" Height="40" Command="{Binding StartSearchCommand}" Content="Search" Margin="10,10,20,10" Background="RoyalBlue"></Button>
+			<Button Height="40" Content="Voice Search" Margin="15,10,15,10" Background="#C37B24D4" Width="160"></Button>
+			<Button Height="40" Content="Add" Margin="15,10,15,10" Background="#D538A669" Width="80"></Button>
+			<ToggleButton Width="95" Classes="EditingMode" Height="40" Margin="25,10,15,10"></ToggleButton>
 		</DockPanel>
 	<TreeDataGrid x:Name="resultGrid" Source="{Binding Source}"
           BorderThickness="2.5" BorderBrush="Gray" CanUserResizeColumns="True">
 	</TreeDataGrid>
 	</StackPanel>
+
 </Window>
