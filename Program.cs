@@ -2,7 +2,8 @@
 using Avalonia.Logging;
 using Avalonia.ReactiveUI;
 using System;
-
+using Avalonia.Win32.Interop;
+using Avalonia.Win32.Input;
 namespace voicio
 {
     internal class Program
@@ -15,6 +16,7 @@ namespace voicio
             .StartWithClassicDesktopLifetime(args);
 
         // Avalonia configuration, don't remove; also used by visual designer.
+        
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()

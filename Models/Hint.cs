@@ -9,8 +9,6 @@ namespace voicio.Models
 {
     public class SearchQuery
     {
-        private string _query;
-        public string Query { get; set; }
-        
+        public string Query { get; set; }   
     }
 }

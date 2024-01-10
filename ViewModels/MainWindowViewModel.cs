@@ -10,20 +10,22 @@ using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
 //using System.Speech;
 using Avalonia.Controls.Selection;
+using Avalonia.Controls.Templates;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace voicio.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private ObservableCollection<Hint> _hints;
-        public ObservableCollection<Hint> Hints { 
-            get => _hints; 
+        private ObservableCollection<Hint>? _hints;
+        public ObservableCollection<Hint>? Hints {
+            get => _hints;
             set => this.RaiseAndSetIfChanged(ref _hints, value);
         }
 
-        private FlatTreeDataGridSource<Hint> _source;
+        private FlatTreeDataGridSource<Hint>? _source;
 
-        public FlatTreeDataGridSource<Hint> Source { 
+        public FlatTreeDataGridSource<Hint>? Source {
             get => _source;
             set => this.RaiseAndSetIfChanged(ref _source, value);
         }
@@ -33,12 +35,12 @@ namespace voicio.ViewModels
         {
             get => _query;
             set => this.RaiseAndSetIfChanged(ref _query, value);
-        } 
+        }
 
         private bool _IsPinnedWindow = false;
-        public bool IsPinnedWindow { 
-            get => _IsPinnedWindow; 
-            set => this.RaiseAndSetIfChanged(ref _IsPinnedWindow, value); 
+        public bool IsPinnedWindow {
+            get => _IsPinnedWindow;
+            set => this.RaiseAndSetIfChanged(ref _IsPinnedWindow, value);
         }
 
         private bool _IsTextSearch = true;
@@ -64,20 +66,73 @@ namespace voicio.ViewModels
         }
 
         private bool _IsFuzzy = false;
-        public bool IsFuzzy { 
-            get => _IsFuzzy; 
-            set => this.RaiseAndSetIfChanged(ref _IsFuzzy, value); 
+        public bool IsFuzzy {
+            get => _IsFuzzy;
+            set => this.RaiseAndSetIfChanged(ref _IsFuzzy, value);
         }
 
-        private bool _IsGridReadOnly = true;
-        
-        public bool IsGridReadOnly { get; set; }
+        private bool _IsGridEditable = false;
 
+        public bool IsGridEditable { 
+            get => _IsGridEditable;
+            set {
+                this.RaiseAndSetIfChanged(ref _IsGridEditable, value);
+                TreeDataGridInit();
+            } 
+        }
         public ICommand StartSearchCommand { get; }
+        public ICommand DeleteHintCommand { get; }
 
-        public ICommand SetSearchTypeCommand { get; }
-
-        public void AddHint(Hint h) => Hints.Add(h);
+        public void AddHint(Hint h) {
+            using (var DataSource = new HelpContext())
+            {
+                DataSource.Hints.Add(h);
+            }    
+            Hints.Add(h);
+        }
+        public void DeleteHint(Hint h)
+        {
+            using (var DataSource = new HelpContext())
+            {
+                DataSource.Hints.Remove(h);
+            }
+            Hints.Remove(h);
+        }
+        public Button DeleteButtonInit()
+        {
+            Button b = new Button();
+            b.Content = "Delete";
+            b.Command = DeleteHintCommand;
+            return b;
+        }
+        public void TreeDataGridInit()
+        {
+            if (IsGridEditable)
+            {
+                Source = new FlatTreeDataGridSource<Hint>(Hints)
+                {
+                    Columns =
+                    {
+                        new TextColumn<Hint, int>("Id", x => x.Id),
+                        new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v),
+                        new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v),
+                        new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => DeleteButtonInit()))
+                    },
+                };
+            } else
+            {
+                Source = new FlatTreeDataGridSource<Hint>(Hints)
+                {
+                    Columns =
+                    {
+                        new TextColumn<Hint, int>("Id", x => x.Id),
+                        new TextColumn<Hint, string>("Text", x => x.HintText),
+                        new TextColumn<Hint, string>("Comment", x => x.Comment)
+                    },
+                };
+            }
+            Source.Selection = new TreeDataGridCellSelectionModel<Hint>(Source);
+        }
         public void StartSearch()
         {
             using (var DataSource = new HelpContext())
@@ -91,23 +146,14 @@ namespace voicio.ViewModels
                     hints = DataSource.Hints.Where(b => b.HintText == Query).ToList();
                 }
                 Hints = new ObservableCollection<Hint>(hints);
-                Source = new FlatTreeDataGridSource<Hint>(Hints)
-                {
-                    Columns =
-                {
-                    new TextColumn<Hint, int>("Id", x => x.Id),
-                    new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v),
-                    new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v)
-                },
-                };
-                Source.Selection = new TreeDataGridCellSelectionModel<Hint>(Source);
-
-            }
-            
+                TreeDataGridInit();
+            } 
         }
         public MainWindowViewModel()
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
+            DeleteHintCommand = ReactiveCommand.Create<Hint>(DeleteHint);
+            TreeDataGridInit();
         }
 }
 }

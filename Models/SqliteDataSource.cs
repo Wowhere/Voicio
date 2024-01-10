@@ -4,14 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Data.Sqlite;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using System.Data.Entity.Hierarchy;
-using Avalonia.Controls;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace voicio.Models
@@ -20,7 +13,7 @@ namespace voicio.Models
     {
         [Key, Required]
         public int Id { get; set; }
-        public string TagText { get; set; }
+        public string? TagText { get; set; }
         public List<HintTag> HintTag { get; } = new();
     }
     public class Hint
@@ -47,8 +40,8 @@ namespace voicio.Models
     }
     public class HelpContext : DbContext
     {
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<Hint> Hints { get; set; }
+        public DbSet<Tag>? Tags { get; set; }
+        public DbSet<Hint>? Hints { get; set; }
         public string DbPath { get; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -15,8 +15,13 @@
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaTitleBarHeightHint="-1"
 		>
-	
 	<Window.Styles>
+		<Style Selector="TreeDataGridRow">
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="Gray"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		</Style>
 		<Style Selector="Button">
 			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 			<Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -58,19 +63,16 @@
 		</Style>
 	</Window.Styles>
 	<Design.DataContext>
-		
-		
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
-	<Border BorderThickness="1" BorderBrush="AliceBlue" CornerRadius="2" IsVisible="True">
+	<Border BorderThickness="1.5" BorderBrush="#D2B1A38E" IsVisible="True">
 	<StackPanel>
 		<Label Margin="10,5,10,0" BorderBrush="White">Voicio</Label>
 		<DockPanel>
-
 			<TextBox x:Name="searchInput" Text="{Binding Query}" Width="600" Watermark="Input..." Margin="10,40,10,0"/>
 			<ToggleButton IsChecked="{Binding IsFuzzy, Mode = TwoWay}" Classes="SearchType" Width="80" Height="30" Margin="10,40,10,0">
 			</ToggleButton>
-			<ToggleButton IsChecked="{Binding IsPinnedWindow, Mode = TwoWay}" Classes="Pin" Width="60" Height="30" Margin="10,40,10,0">
+			<ToggleButton IsChecked="{Binding IsPinnedWindow, Mode = TwoWay}" Classes="Pin" Width="65" Height="30" Margin="5,40,10,0">
 			</ToggleButton>
 		</DockPanel>
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
@@ -82,10 +84,13 @@
 			<Button Width="340" Height="40" Command="{Binding StartSearchCommand}" Content="Search" Margin="10,10,20,10" Background="RoyalBlue"></Button>
 			<Button Height="40" Content="Voice Search" Margin="15,10,15,10" Background="#C37B24D4" Width="160"></Button>
 			<Button Height="40" Command="{Binding AddHint}" Content="Add" Margin="15,10,15,10" Background="#D538A669" Width="80"></Button>
-			<ToggleButton Width="95" Classes="EditingMode" Height="40" Margin="25,10,15,10"></ToggleButton>
+			<ToggleButton IsChecked="{Binding IsGridEditable, Mode = TwoWay}" Width="100" Classes="EditingMode" Height="40" Margin="15,10,0,10"></ToggleButton>
 		</DockPanel>
-		<TreeDataGrid x:Name="resultGrid" Source="{Binding Source}"
-			  BorderThickness="2.5" BorderBrush="Gray" CanUserResizeColumns="True">
+		<TreeDataGrid x:Name="resultGrid" Source="{Binding Source}" HorizontalAlignment="Stretch"
+			  BorderThickness="2" BorderBrush="Gray" CanUserResizeColumns="True">
+			<!--<TreeDataGrid.Resources>
+				<DataTemplate>
+				</DataTemplate>-->
 		</TreeDataGrid>
 	</StackPanel>
 	</Border>
