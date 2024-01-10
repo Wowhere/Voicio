@@ -19,7 +19,7 @@ namespace voicio
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .WithInterFont()
-                //.LogToTrace(LogEventLevel.Debug)
+                .LogToTrace(LogEventLevel.Verbose)
                 .UseReactiveUI();
     }
 }

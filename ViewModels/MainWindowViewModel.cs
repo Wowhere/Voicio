@@ -77,6 +77,7 @@ namespace voicio.ViewModels
 
         public ICommand SetSearchTypeCommand { get; }
 
+        public void AddHint(Hint h) => Hints.Add(h);
         public void StartSearch()
         {
             using (var DataSource = new HelpContext())
