@@ -12,6 +12,8 @@ using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Avalonia.Markup.Xaml;
+using voicio.Views;
 
 namespace voicio.ViewModels
 {
@@ -49,6 +51,8 @@ namespace voicio.ViewModels
 
         private bool _IsTagSearch = true;
 
+        //private Button AddHintButton => this.FindControl<Button>("AddHintButton");
+
         public bool IsTextSearch
         {
             get => _IsTextSearch;
@@ -64,15 +68,18 @@ namespace voicio.ViewModels
             get => _IsTagSearch;
             set => this.RaiseAndSetIfChanged(ref _IsTagSearch, value);
         }
-
         private bool _IsFuzzy = false;
         public bool IsFuzzy {
             get => _IsFuzzy;
             set => this.RaiseAndSetIfChanged(ref _IsFuzzy, value);
         }
-
         private bool _IsGridEditable = false;
-
+        private bool _IsAddButtonVisible = false;
+        public bool IsAddButtonVisible
+        {
+            get => _IsAddButtonVisible;
+            set => this.RaiseAndSetIfChanged(ref _IsAddButtonVisible, value);
+        }
         public bool IsGridEditable { 
             get => _IsGridEditable;
             set {
@@ -82,7 +89,7 @@ namespace voicio.ViewModels
         }
         public ICommand StartSearchCommand { get; }
         public ICommand DeleteHintCommand { get; }
-
+        //public Button adh => MainWindow.FindControl<Button>("AddHintButton_");
         public void AddHint(Hint h) {
             using (var DataSource = new HelpContext())
             {
@@ -119,7 +126,9 @@ namespace voicio.ViewModels
                         new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => DeleteButtonInit()))
                     },
                 };
-            } else
+                IsAddButtonVisible = true;
+            }
+            else
             {
                 Source = new FlatTreeDataGridSource<Hint>(Hints)
                 {
@@ -130,6 +139,7 @@ namespace voicio.ViewModels
                         new TextColumn<Hint, string>("Comment", x => x.Comment)
                     },
                 };
+                IsAddButtonVisible = false;
             }
             Source.Selection = new TreeDataGridCellSelectionModel<Hint>(Source);
         }
