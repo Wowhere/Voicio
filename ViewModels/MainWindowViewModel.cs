@@ -48,6 +48,10 @@ namespace voicio.ViewModels
         private bool _IsTextSearch = true;
         private bool _IsCommentSearch = true;
         private bool _IsTagSearch = true;
+        private bool _IsFuzzy = false;
+        private bool _IsGridEditable = false;
+        private bool _IsAddButtonVisible = false;
+        private bool _IsHighlighting = false;
         public bool IsTextSearch
         {
             get => _IsTextSearch;
@@ -63,13 +67,17 @@ namespace voicio.ViewModels
             get => _IsTagSearch;
             set => this.RaiseAndSetIfChanged(ref _IsTagSearch, value);
         }
-        private bool _IsFuzzy = false;
+        
+        public bool IsHighlighting
+        {
+            get => _IsHighlighting;
+            set => this.RaiseAndSetIfChanged(ref _IsHighlighting, value);
+        }
         public bool IsFuzzy {
             get => _IsFuzzy;
             set => this.RaiseAndSetIfChanged(ref _IsFuzzy, value);
         }
-        private bool _IsGridEditable = false;
-        private bool _IsAddButtonVisible = false;
+        
         public bool IsAddButtonVisible
         {
             get => _IsAddButtonVisible;
@@ -151,7 +159,7 @@ namespace voicio.ViewModels
                     if (IsTextSearch) hints.Add(DataSource.Hints.Where(b => b.HintText == Query).ToList());
                     if (IsCommentSearch) hints.Add(DataSource.Hints.Where(b => b.Comment == Query).ToList());
                 }
-                Hints = new ObservableCollection<Hint>(hints);
+                Hints = new ObservableCollection<Hint>(hints.Distinct());
                 TreeDataGridInit();
             } 
         }
