@@ -14,6 +14,7 @@ using Avalonia.Controls.Templates;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Avalonia.Markup.Xaml;
 using voicio.Views;
+using DynamicData;
 
 namespace voicio.ViewModels
 {
@@ -44,15 +45,9 @@ namespace voicio.ViewModels
             get => _IsPinnedWindow;
             set => this.RaiseAndSetIfChanged(ref _IsPinnedWindow, value);
         }
-
         private bool _IsTextSearch = true;
-
         private bool _IsCommentSearch = true;
-
         private bool _IsTagSearch = true;
-
-        //private Button AddHintButton => this.FindControl<Button>("AddHintButton");
-
         public bool IsTextSearch
         {
             get => _IsTextSearch;
@@ -89,7 +84,6 @@ namespace voicio.ViewModels
         }
         public ICommand StartSearchCommand { get; }
         public ICommand DeleteHintCommand { get; }
-        //public Button adh => MainWindow.FindControl<Button>("AddHintButton_");
         public void AddHint(Hint h) {
             using (var DataSource = new HelpContext())
             {
@@ -147,13 +141,15 @@ namespace voicio.ViewModels
         {
             using (var DataSource = new HelpContext())
             {
-                List<Hint> hints;
+                List<Hint> hints = new List<Hint>();
                 if (IsFuzzy)
                 {
-                    hints = DataSource.Hints.Where(b => b.HintText.Contains(Query)).ToList();
+                    if (IsTextSearch) hints.Add(DataSource.Hints.Where(b => b.HintText.Contains(Query)).ToList());
+                    if (IsCommentSearch) hints.Add(DataSource.Hints.Where(b => b.Comment.Contains(Query)).ToList());
                 } else
                 {
-                    hints = DataSource.Hints.Where(b => b.HintText == Query).ToList();
+                    if (IsTextSearch) hints.Add(DataSource.Hints.Where(b => b.HintText == Query).ToList());
+                    if (IsCommentSearch) hints.Add(DataSource.Hints.Where(b => b.Comment == Query).ToList());
                 }
                 Hints = new ObservableCollection<Hint>(hints);
                 TreeDataGridInit();
