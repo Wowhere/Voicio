@@ -9,7 +9,7 @@
 		Name="HintWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="voicio"
-		Background="#121212"
+		Background="#1A1A1A"
         Topmost="{Binding IsPinnedWindow}"
 		WindowStartupLocation="CenterScreen"
 		ExtendClientAreaToDecorationsHint="True"

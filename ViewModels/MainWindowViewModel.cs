@@ -15,6 +15,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Avalonia.Markup.Xaml;
 using voicio.Views;
 using DynamicData;
+using Avalonia.Markup.Xaml.Templates;
+using Avalonia.Controls.Primitives;
+using System.Data.Entity.Infrastructure;
 
 namespace voicio.ViewModels
 {
@@ -116,15 +119,22 @@ namespace voicio.ViewModels
         }
         public void TreeDataGridInit()
         {
+            var invisible = new GridLength(0);
             if (IsGridEditable)
             {
+                var EditOptions= new TextColumnOptions<Hint>
+                {
+                    BeginEditGestures = BeginEditGestures.Tap,
+                    IsTextSearchEnabled = true
+                };
+                
                 Source = new FlatTreeDataGridSource<Hint>(Hints)
                 {
                     Columns =
                     {
-                        new TextColumn<Hint, int>("Id", x => x.Id),
-                        new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v),
-                        new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v),
+                        new TextColumn<Hint, int>("Id", x => x.Id, options: new TextColumnOptions<Hint>{MaxWidth = invisible}),
+                        new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v, options: EditOptions),
+                        new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v, options: EditOptions),
                         new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => DeleteButtonInit()))
                     },
                 };
@@ -136,7 +146,7 @@ namespace voicio.ViewModels
                 {
                     Columns =
                     {
-                        new TextColumn<Hint, int>("Id", x => x.Id),
+                        new TextColumn<Hint, int>("Id", x => x.Id, options: new TextColumnOptions<Hint>{MaxWidth = invisible}),
                         new TextColumn<Hint, string>("Text", x => x.HintText),
                         new TextColumn<Hint, string>("Comment", x => x.Comment)
                     },
