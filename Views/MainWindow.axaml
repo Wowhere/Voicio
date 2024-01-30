@@ -62,9 +62,6 @@
 			</Style>
 		</Style>
 	</Window.Styles>
-	<Design.DataContext>
-		<vm:MainWindowViewModel/>
-	</Design.DataContext>
 	<Border BorderThickness="1.5" BorderBrush="#D2B1A38E" IsVisible="True">
 	<StackPanel>
 		<Label Margin="10,5,10,0" BorderBrush="White">Voicio</Label>
@@ -87,11 +84,23 @@
 			<Button Height="40" IsVisible="{Binding IsAddButtonVisible, Mode = TwoWay}" Command="{Binding AddHint}" Content="Add" Margin="15,10,15,10" Background="#D538A669" Width="80"></Button>
 			<ToggleButton IsChecked="{Binding IsGridEditable, Mode = TwoWay}" Width="100" Classes="EditingMode" Height="40" Margin="15,10,0,10"></ToggleButton>
 		</DockPanel>
-		<TreeDataGrid x:Name="resultGrid" Source="{Binding Source}" HorizontalAlignment="Stretch"
-			  BorderThickness="2" BorderBrush="Gray" CanUserResizeColumns="True">
+		<TreeDataGrid x:Name="resultGrid" Source="{Binding HintsGridData}" HorizontalAlignment="Stretch"
+			   BorderThickness="2" BorderBrush="Gray" CanUserResizeColumns="True">
 			<!--<TreeDataGrid.Resources>
-				<DataTemplate>
-				</DataTemplate>-->
+				<DataTemplate x:Key="Text">
+
+				</DataTemplate>
+			</TreeDataGrid.Resources>-->
+			<TreeDataGrid.ContextMenu>
+				<ContextMenu>
+					<MenuItem Header="Copy" Command="" />
+					<MenuItem Header="Execute" Command=""/>	
+					<MenuItem Header="Open in browser"/>	
+					<MenuItem Header="---"/>	
+					<MenuItem Header="Delete" Command="{Binding DeleteHintCommand}" CommandParameter="{ReflectionBinding HintsGridData.RowSelection.SelectedItem}"  IsEnabled="{Binding IsGridEditable}"/>	
+				</ContextMenu>
+			</TreeDataGrid.ContextMenu>
+			
 		</TreeDataGrid>
 	</StackPanel>
 	</Border>
