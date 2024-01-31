@@ -21,8 +21,8 @@ namespace voicio.Models
     {
         [Key, Required]
         public int Id { get; set; }
-        public string HintText { get; set; }
-        public string Comment { get; set; }
+        public string? HintText { get; set; }
+        public string? Comment { get; set; }
         public List<HintTag> HintTag { get; } = new();
         public void Remove(int id)
         {
@@ -34,14 +34,6 @@ namespace voicio.Models
                 DataSource.SaveChanges();
             }
         }
-
-        public void Add()
-        {
-            using (var DataSource = new HelpContext())
-            {
-                //DataSource.Hints.Add();
-            }
-        }
         public Hint(int id)
         {
             Id = id;
@@ -51,6 +43,9 @@ namespace voicio.Models
             Id = id;
             HintText = hintText;
             Comment = comment;
+        }
+        public Hint()
+        {
         }
     }
     public class HintTag
@@ -74,6 +69,14 @@ namespace voicio.Models
         {
             var path = AppDomain.CurrentDomain.BaseDirectory;
             DbPath = System.IO.Path.Join(path, "helper.db");
+        }
+        public void AddHint(Hint h)
+        {
+            using (var DataSource = new HelpContext())
+            {
+                DataSource.Hints.Add(h);
+                DataSource.SaveChanges();
+            }
         }
     }
 }

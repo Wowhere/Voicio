@@ -95,12 +95,14 @@ namespace voicio.ViewModels
         }
         public ICommand StartSearchCommand { get; }
         public ICommand DeleteHintCommand { get; }
-        public void AddHint(Hint h) {
+        public void CreateHint() {
+            var temp = new Hint();
             using (var DataSource = new HelpContext())
             {
-                DataSource.Hints.Add(h);
+                DataSource.Hints.Add(temp);
+                DataSource.SaveChanges();
             }
-            HintsRows.Add(h);
+            HintsRows.Add(temp);
         }
         private void DeleteHintEvent(object sender, KeyEventArgs e)
         {
@@ -162,8 +164,7 @@ namespace voicio.ViewModels
                 };
                 IsAddButtonVisible = false;
             }
-            HintsGridData.Selection = new TreeDataGridCellSelectionModel<Hint>(HintsGridData) { };
-
+            HintsGridData.Selection = new TreeDataGridCellSelectionModel<Hint>(HintsGridData);
         }
         public void StartSearch()
         {
