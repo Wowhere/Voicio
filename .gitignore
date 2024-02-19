@@ -23,3 +23,8 @@ bin/Debug/net6.0/voicio.runtimeconfig.json
 bin/Debug/net6.0/voicio.deps.json
 .vs/AvaloniaApplication2/v17/.suo
 *.json
+bin/Debug/net6.0/helper.db
+ViewModels/CustomSelectionModel.cs
+Views/MainWindow.axaml.cs
+Views/MainWindow.axaml.cs
+AvaloniaApplication2.csproj

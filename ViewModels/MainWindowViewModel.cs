@@ -24,14 +24,16 @@ namespace voicio.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private ObservableCollection<Hint>? _HintsRows;
-        public ObservableCollection<Hint>? HintsRows {
+        public ObservableCollection<Hint>? HintsRows
+        {
             get => _HintsRows;
             set => this.RaiseAndSetIfChanged(ref _HintsRows, value);
         }
 
         private FlatTreeDataGridSource<Hint>? _HintsGridData;
 
-        public FlatTreeDataGridSource<Hint>? HintsGridData {
+        public FlatTreeDataGridSource<Hint>? HintsGridData
+        {
             get => _HintsGridData;
             set => this.RaiseAndSetIfChanged(ref _HintsGridData, value);
         }
@@ -44,7 +46,8 @@ namespace voicio.ViewModels
         }
 
         private bool _IsPinnedWindow = false;
-        public bool IsPinnedWindow {
+        public bool IsPinnedWindow
+        {
             get => _IsPinnedWindow;
             set => this.RaiseAndSetIfChanged(ref _IsPinnedWindow, value);
         }
@@ -76,7 +79,8 @@ namespace voicio.ViewModels
             get => _IsHighlighting;
             set => this.RaiseAndSetIfChanged(ref _IsHighlighting, value);
         }
-        public bool IsFuzzy {
+        public bool IsFuzzy
+        {
             get => _IsFuzzy;
             set => this.RaiseAndSetIfChanged(ref _IsFuzzy, value);
         }
@@ -86,16 +90,20 @@ namespace voicio.ViewModels
             get => _IsAddButtonVisible;
             set => this.RaiseAndSetIfChanged(ref _IsAddButtonVisible, value);
         }
-        public bool IsGridEditable {
+        public bool IsGridEditable
+        {
             get => _IsGridEditable;
-            set {
+            set
+            {
                 this.RaiseAndSetIfChanged(ref _IsGridEditable, value);
                 TreeDataGridInit();
             }
         }
         public ICommand StartSearchCommand { get; }
         public ICommand DeleteHintCommand { get; }
-        public void CreateHint() {
+        public ICommand InsertHintCommand { get; }
+        public void CreateHint()
+        {
             var temp = new Hint();
             using (var DataSource = new HelpContext())
             {
@@ -104,49 +112,39 @@ namespace voicio.ViewModels
             }
             HintsRows.Add(temp);
         }
-        private void DeleteHintEvent(object sender, KeyEventArgs e)
-        {
-            Console.WriteLine(sender);
-            Console.WriteLine(e);
-        }
         private void DeleteHint(Hint e)
         {
             Console.WriteLine(e);
         }
-        //private void Cell_Selection(TreeDataGridCellSelectionChangedEvantArgs<Hint> sender) 
-        // {
-        //    Console.WriteLine(sender);
-        //}
-        //public event EventHandler<TreeDataGridCellSelectionChangedEventArgs<Hint>>? Cell_Selection(object sender, RoutedEventArgs e) {
-        //    Console.WriteLine();
-        //}
-        //private Hint _SelectedHint;
-        //public Hint SelectedHint
-        //{
-        //    get => _SelectedHint;
-            //set => this.RaiseAndSetIfChanged(ref _SelectedHint, value);
-        //    set => HintsGridData.RowSelection;
-        //}
+        private void InsertHint(Hint e)
+        {
+            Console.WriteLine(e);
+        }
+        private Button SaveButtonInit()
+        {
+            var b = new Button();
+            b.Content = "Save";
+            b.Command = InsertHintCommand;
+            b.IsVisible = false;
+            return b;
+        }
         public void TreeDataGridInit()
         {
-            var invisible = new GridLength(0);
-
             if (IsGridEditable)
             {
-                var EditOptions= new TextColumnOptions<Hint>
+                var EditOptions = new TextColumnOptions<Hint>
                 {
                     BeginEditGestures = BeginEditGestures.Tap
                 };
 
                 HintsGridData = new FlatTreeDataGridSource<Hint>(HintsRows)
                 {
-                    
+
                     Columns =
                     {
-                        //new TextColumn<Hint, int>("Id", x => x.Id, options: new TextColumnOptions<Hint>{MaxWidth = invisible}),
                         new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v, options: EditOptions),
                         new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v, options: EditOptions),
-                        //new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => DeleteButtonInit(), supportsRecycling: true))
+                        new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => SaveButtonInit(), supportsRecycling: true))
                     },
                 };
                 IsAddButtonVisible = true;
@@ -157,7 +155,6 @@ namespace voicio.ViewModels
                 {
                     Columns =
                     {
-                        //new TextColumn<Hint, int>("Id", x => x.Id, options: new TextColumnOptions<Hint>{MaxWidth = invisible}),
                         new TextColumn<Hint, string>("Text", x => x.HintText),
                         new TextColumn<Hint, string>("Comment", x => x.Comment)
                     },
@@ -175,7 +172,8 @@ namespace voicio.ViewModels
                 {
                     if (IsTextSearch) hints.Add(DataSource.Hints.Where(b => b.HintText.Contains(Query)).ToList());
                     if (IsCommentSearch) hints.Add(DataSource.Hints.Where(b => b.Comment.Contains(Query)).ToList());
-                } else
+                }
+                else
                 {
                     if (IsTextSearch) hints.Add(DataSource.Hints.Where(b => b.HintText == Query).ToList());
                     if (IsCommentSearch) hints.Add(DataSource.Hints.Where(b => b.Comment == Query).ToList());
@@ -188,7 +186,8 @@ namespace voicio.ViewModels
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
             DeleteHintCommand = ReactiveCommand.Create<Hint>(DeleteHint);
+            InsertHintCommand = ReactiveCommand.Create<Hint>(InsertHint);
             TreeDataGridInit();
         }
-}
+    }
 }
