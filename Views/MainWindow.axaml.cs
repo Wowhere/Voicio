@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using System;
 using System.Linq;
 
 namespace voicio.Views
@@ -9,6 +10,11 @@ namespace voicio.Views
         public MainWindow()
         {
             InitializeComponent();
+        }
+        public void MakeSaveButtonVisible(object sender, TextInputEventArgs e)
+        {
+            //sender.DataContext.HintsRows
+            Console.WriteLine(sender);
         }
     }
 }

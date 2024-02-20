@@ -17,6 +17,7 @@ using Avalonia.Input;
 using Avalonia.Data;
 using Avalonia.Controls.Utils;
 using Avalonia.Controls.Primitives;
+using System.ComponentModel;
 
 
 namespace voicio.ViewModels
@@ -101,7 +102,9 @@ namespace voicio.ViewModels
         }
         public ICommand StartSearchCommand { get; }
         public ICommand DeleteHintCommand { get; }
-        public ICommand InsertHintCommand { get; }
+        public ICommand SaveHintCommand { get; }
+        //public ICommand InsertHintCommand { get; }
+        //public ICommand MakeSaveButtonVisible11 { get; }
         public void CreateHint()
         {
             var temp = new Hint();
@@ -116,7 +119,7 @@ namespace voicio.ViewModels
         {
             Console.WriteLine(e);
         }
-        private void InsertHint(Hint e)
+        private void SaveHint(Hint e)
         {
             Console.WriteLine(e);
         }
@@ -124,8 +127,10 @@ namespace voicio.ViewModels
         {
             var b = new Button();
             b.Content = "Save";
-            b.Command = InsertHintCommand;
-            b.IsVisible = false;
+            //b.Click += SaveHint;
+            b.Command = SaveHintCommand;
+            b.CommandParameter = HintsGridData?.RowSelection?.SelectedItem;
+            b.IsVisible = true;
             return b;
         }
         public void TreeDataGridInit()
@@ -186,7 +191,8 @@ namespace voicio.ViewModels
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
             DeleteHintCommand = ReactiveCommand.Create<Hint>(DeleteHint);
-            InsertHintCommand = ReactiveCommand.Create<Hint>(InsertHint);
+            SaveHintCommand = ReactiveCommand.Create<Hint>(SaveHint);
+            //MakeSaveButtonVisible11 = ReactiveCommand.Create(MakeVisible);
             TreeDataGridInit();
         }
     }
