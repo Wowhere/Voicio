@@ -18,6 +18,8 @@ using Avalonia.Data;
 using Avalonia.Controls.Utils;
 using Avalonia.Controls.Primitives;
 using System.ComponentModel;
+using Microsoft.EntityFrameworkCore.Internal;
+using Avalonia.Data.Core;
 
 
 namespace voicio.ViewModels
@@ -101,36 +103,50 @@ namespace voicio.ViewModels
             }
         }
         public ICommand StartSearchCommand { get; }
-        public ICommand DeleteHintCommand { get; }
+        public ICommand RemoveHintCommand { get; }
         public ICommand SaveHintCommand { get; }
         //public ICommand InsertHintCommand { get; }
         //public ICommand MakeSaveButtonVisible11 { get; }
-        public void CreateHint()
+        private void RemoveHint(object sender, RoutedEventArgs e)
         {
-            var temp = new Hint();
-            using (var DataSource = new HelpContext())
-            {
-                DataSource.Hints.Add(temp);
-                DataSource.SaveChanges();
-            }
-            HintsRows.Add(temp);
+            Button b = (Button)sender;
+            Hint SavedHint = (Hint)b.DataContext;
+            SavedHint.Remove();
+            Console.WriteLine(sender);
         }
-        private void DeleteHint(Hint e)
+        private void SaveHint(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine(e);
+            Button b = (Button)sender;
+            Hint SavedHint = (Hint)b.DataContext;
+            SavedHint.Update();
+            Console.WriteLine(sender);
         }
-        private void SaveHint(Hint e)
+        private void AddHint(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine(e);
+            Button b = (Button)sender;
+            Hint SavedHint = (Hint)b.DataContext;
+            SavedHint.Add();
+            Console.WriteLine(sender);
         }
         private Button SaveButtonInit()
         {
+            //var bind = new Binding("$parent");
+            //bind.RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(TreeDataGridRow) };
+            //var b = new Button() {
+               // [!Button.CommandParameterProperty] = bind,
+               // [!Button.IsVisibleProperty] = bind.
+            //};
             var b = new Button();
             b.Content = "Save";
-            //b.Click += SaveHint;
-            b.Command = SaveHintCommand;
-            b.CommandParameter = HintsGridData?.RowSelection?.SelectedItem;
-            b.IsVisible = true;
+            b.Click += SaveHint;
+            //b.IsVisible = true;
+            return b;
+        }
+        private Button RemoveButtonInit()
+        {
+            b.Content = "Remove";
+            b.Click += AddHint;
+            //b.IsVisible = true;
             return b;
         }
         public void TreeDataGridInit()
@@ -139,20 +155,28 @@ namespace voicio.ViewModels
             {
                 var EditOptions = new TextColumnOptions<Hint>
                 {
-                    BeginEditGestures = BeginEditGestures.Tap
+                    BeginEditGestures = BeginEditGestures.Tap,
+                    IsTextSearchEnabled = true,
                 };
+
+                TextColumn<Hint, string> HintTextColumn = new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v, options: EditOptions);
+                TextColumn<Hint, string> HintCommentColumn = new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v, options: EditOptions);
 
                 HintsGridData = new FlatTreeDataGridSource<Hint>(HintsRows)
                 {
-
                     Columns =
                     {
-                        new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v, options: EditOptions),
-                        new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v, options: EditOptions),
-                        new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => SaveButtonInit(), supportsRecycling: true))
+                        HintTextColumn,
+                        HintCommentColumn,
+                        new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => SaveButtonInit(), supportsRecycling: true)),
+                        new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => RemoveButtonInit(), supportsRecycling: true))
                     },
                 };
+                //var a = new TextColumn<string, string>("1", x => x);
+                //HintTextColumn.PropertyChanged += MakeSaveButtonVisible1;
+                //HintCommentColumn.PropertyChanged += MakeSaveButtonVisible1;
                 IsAddButtonVisible = true;
+                HintsGridData.Selection = new TreeDataGridRowSelectionModel<Hint>(HintsGridData);
             }
             else
             {
@@ -165,8 +189,8 @@ namespace voicio.ViewModels
                     },
                 };
                 IsAddButtonVisible = false;
+                HintsGridData.Selection = new TreeDataGridCellSelectionModel<Hint>(HintsGridData);
             }
-            HintsGridData.Selection = new TreeDataGridCellSelectionModel<Hint>(HintsGridData);
         }
         public void StartSearch()
         {
@@ -187,11 +211,13 @@ namespace voicio.ViewModels
             }
             TreeDataGridInit();
         }
+
         public MainWindowViewModel()
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
-            DeleteHintCommand = ReactiveCommand.Create<Hint>(DeleteHint);
-            SaveHintCommand = ReactiveCommand.Create<Hint>(SaveHint);
+            //RemoveHintCommand = ReactiveCommand.Create<Hint>(RemoveHint);
+            //SaveHintCommand = ReactiveCommand.Create<object>(SaveHint);
+            //SaveHintCommand = ReactiveCommand.Create(SaveHint);
             //MakeSaveButtonVisible11 = ReactiveCommand.Create(MakeVisible);
             TreeDataGridInit();
         }

@@ -24,13 +24,30 @@ namespace voicio.Models
         public string? HintText { get; set; }
         public string? Comment { get; set; }
         public List<HintTag> HintTag { get; } = new();
-        public void Remove(int id)
+        public void Remove()
         {
-            var removed = this.Id;
             using (var DataSource = new HelpContext())
             {
                 DataSource.Hints.Attach(this);
                 DataSource.Hints.Remove(this);
+                DataSource.SaveChanges();
+            }
+        }
+        public void Add()
+        {
+            using (var DataSource = new HelpContext())
+            {
+                DataSource.Hints.Attach(this);
+                DataSource.Hints.Add(this);
+                DataSource.SaveChanges();
+            }
+        }
+        public void Update()
+        {
+            using (var DataSource = new HelpContext())
+            {
+                DataSource.Hints.Attach(this);
+                DataSource.Hints.Update(this);
                 DataSource.SaveChanges();
             }
         }
