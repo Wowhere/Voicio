@@ -20,6 +20,7 @@ using Avalonia.Controls.Primitives;
 using System.ComponentModel;
 using Microsoft.EntityFrameworkCore.Internal;
 using Avalonia.Data.Core;
+using Avalonia.Media;
 
 
 namespace voicio.ViewModels
@@ -107,46 +108,40 @@ namespace voicio.ViewModels
         public ICommand SaveHintCommand { get; }
         //public ICommand InsertHintCommand { get; }
         //public ICommand MakeSaveButtonVisible11 { get; }
+
         private void RemoveHint(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
             Hint SavedHint = (Hint)b.DataContext;
+            HintsRows.Remove(SavedHint);
             SavedHint.Remove();
-            Console.WriteLine(sender);
         }
         private void SaveHint(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
             Hint SavedHint = (Hint)b.DataContext;
             SavedHint.Update();
-            Console.WriteLine(sender);
         }
-        private void AddHint(object sender, RoutedEventArgs e)
+        public void AddHint()
         {
-            Button b = (Button)sender;
-            Hint SavedHint = (Hint)b.DataContext;
-            SavedHint.Add();
-            Console.WriteLine(sender);
+            Hint NewHint = new Hint();
+            HintsRows.Add(NewHint);
+            NewHint.Add();
         }
         private Button SaveButtonInit()
         {
-            //var bind = new Binding("$parent");
-            //bind.RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(TreeDataGridRow) };
-            //var b = new Button() {
-               // [!Button.CommandParameterProperty] = bind,
-               // [!Button.IsVisibleProperty] = bind.
-            //};
             var b = new Button();
+            b.Background = new SolidColorBrush() { Color = new Color(255, 34, 139, 34) };
             b.Content = "Save";
             b.Click += SaveHint;
-            //b.IsVisible = true;
             return b;
         }
         private Button RemoveButtonInit()
         {
+            var b = new Button();
+            b.Background = new SolidColorBrush() { Color = new Color(255, 80, 00, 20) };
             b.Content = "Remove";
-            b.Click += AddHint;
-            //b.IsVisible = true;
+            b.Click += RemoveHint;
             return b;
         }
         public void TreeDataGridInit()
@@ -172,11 +167,7 @@ namespace voicio.ViewModels
                         new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => RemoveButtonInit(), supportsRecycling: true))
                     },
                 };
-                //var a = new TextColumn<string, string>("1", x => x);
-                //HintTextColumn.PropertyChanged += MakeSaveButtonVisible1;
-                //HintCommentColumn.PropertyChanged += MakeSaveButtonVisible1;
                 IsAddButtonVisible = true;
-                HintsGridData.Selection = new TreeDataGridRowSelectionModel<Hint>(HintsGridData);
             }
             else
             {
@@ -189,8 +180,9 @@ namespace voicio.ViewModels
                     },
                 };
                 IsAddButtonVisible = false;
-                HintsGridData.Selection = new TreeDataGridCellSelectionModel<Hint>(HintsGridData);
+                
             }
+            HintsGridData.Selection = new TreeDataGridCellSelectionModel<Hint>(HintsGridData);
         }
         public void StartSearch()
         {
