@@ -153,7 +153,6 @@ namespace voicio.ViewModels
                     BeginEditGestures = BeginEditGestures.Tap,
                     IsTextSearchEnabled = true,
                 };
-
                 TextColumn<Hint, string> HintTextColumn = new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v, options: EditOptions);
                 TextColumn<Hint, string> HintCommentColumn = new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v, options: EditOptions);
 

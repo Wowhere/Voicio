@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Input.TextInput;
 using Avalonia.Remote.Protocol.Input;
@@ -16,11 +17,13 @@ namespace voicio.Views
         {
             InitializeComponent();
         }
-        //public void MakeSaveButtonVisible(object sender, PointerPressedEventArgs e)
-        //{
-        //    Control grid = (Control)sender;
-        //    Console.WriteLine(sender);
-        //}
+        public void CopyHintToClipboard(object sender, TappedEventArgs e)
+        {
+            TreeDataGridRow c = (TreeDataGridRow)sender;
+            var clipboard = TopLevel.GetTopLevel((TreeDataGridCell)sender)?.Clipboard;
+            var dataObject = new DataObject();
+            dataObject.Set(DataFormats.Text, c.DataContext.ToString);
+        }
         //public void MakeSaveButtonVisible(object sender, PropertyChangedEventArgs e)
         //{
         //    //sender.DataContext.HintsRows
