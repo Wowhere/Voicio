@@ -17,12 +17,18 @@ namespace voicio.Views
         {
             InitializeComponent();
         }
-        public void CopyHintToClipboard(object sender, TappedEventArgs e)
+        public async void CopyHintToClipboard(object sender, TappedEventArgs e)
         {
-            TreeDataGridRow c = (TreeDataGridRow)sender;
-            var clipboard = TopLevel.GetTopLevel((TreeDataGridCell)sender)?.Clipboard;
-            var dataObject = new DataObject();
-            dataObject.Set(DataFormats.Text, c.DataContext.ToString);
+            if (e.Source.GetType() == typeof(Avalonia.Controls.TextBlock))
+            {
+                TreeDataGrid c = (TreeDataGrid)sender;
+                var clipboard = TopLevel.GetTopLevel(c)?.Clipboard;
+                var dataObject = new DataObject();
+
+                dataObject.Set(DataFormats.Text, ((Avalonia.Controls.TextBlock)e.Source).Text);
+                await clipboard.SetDataObjectAsync(dataObject);
+            }
+            
         }
         //public void MakeSaveButtonVisible(object sender, PropertyChangedEventArgs e)
         //{

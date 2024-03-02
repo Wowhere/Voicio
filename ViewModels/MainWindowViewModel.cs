@@ -18,10 +18,8 @@ using Avalonia.Data;
 using Avalonia.Controls.Utils;
 using Avalonia.Controls.Primitives;
 using System.ComponentModel;
-using Microsoft.EntityFrameworkCore.Internal;
 using Avalonia.Data.Core;
 using Avalonia.Media;
-
 
 namespace voicio.ViewModels
 {
@@ -104,11 +102,6 @@ namespace voicio.ViewModels
             }
         }
         public ICommand StartSearchCommand { get; }
-        public ICommand RemoveHintCommand { get; }
-        public ICommand SaveHintCommand { get; }
-        //public ICommand InsertHintCommand { get; }
-        //public ICommand MakeSaveButtonVisible11 { get; }
-
         private void RemoveHint(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
@@ -144,6 +137,7 @@ namespace voicio.ViewModels
             b.Click += RemoveHint;
             return b;
         }
+        
         public void TreeDataGridInit()
         {
             if (IsGridEditable)
@@ -155,7 +149,6 @@ namespace voicio.ViewModels
                 };
                 TextColumn<Hint, string> HintTextColumn = new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v, options: EditOptions);
                 TextColumn<Hint, string> HintCommentColumn = new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v, options: EditOptions);
-
                 HintsGridData = new FlatTreeDataGridSource<Hint>(HintsRows)
                 {
                     Columns =
@@ -206,10 +199,6 @@ namespace voicio.ViewModels
         public MainWindowViewModel()
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
-            //RemoveHintCommand = ReactiveCommand.Create<Hint>(RemoveHint);
-            //SaveHintCommand = ReactiveCommand.Create<object>(SaveHint);
-            //SaveHintCommand = ReactiveCommand.Create(SaveHint);
-            //MakeSaveButtonVisible11 = ReactiveCommand.Create(MakeVisible);
             TreeDataGridInit();
         }
     }

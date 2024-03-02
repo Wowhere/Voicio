@@ -85,7 +85,7 @@
 			<ToggleButton IsChecked="{Binding IsGridEditable, Mode = TwoWay}" Width="100" Classes="EditingMode" Height="40" Margin="15,10,0,10"></ToggleButton>
 		</DockPanel>
 		<TreeDataGrid x:Name="resultGrid" Source="{Binding HintsGridData}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="2"  BorderBrush="Gray" CanUserResizeColumns="True" Tapped="CopyHintToClipboard">
-			<!--PointerPressed="MakeSaveButtonVisible">-->
+			<!--<TreeDataGridRow Tapped="CopyHintToClipboard"></TreeDataGridRow>-->
 			<TreeDataGrid.ContextMenu>
 				<ContextMenu>
 					<MenuItem Header="Copy" Command="" />
