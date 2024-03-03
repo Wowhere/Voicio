@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Linq;
-using Avalonia;
-using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
 //using System.Speech;
@@ -13,13 +11,12 @@ using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
 using DynamicData;
 using Avalonia.Interactivity;
-using Avalonia.Input;
-using Avalonia.Data;
-using Avalonia.Controls.Utils;
-using Avalonia.Controls.Primitives;
-using System.ComponentModel;
-using Avalonia.Data.Core;
 using Avalonia.Media;
+using Vosk;
+using NAudio;
+using NAudio.Wave;
+using System.IO;
+using System;
 
 namespace voicio.ViewModels
 {
@@ -102,6 +99,7 @@ namespace voicio.ViewModels
             }
         }
         public ICommand StartSearchCommand { get; }
+        public ICommand StartVoiceSearchCommand { get; }
         private void RemoveHint(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
@@ -114,6 +112,10 @@ namespace voicio.ViewModels
             Button b = (Button)sender;
             Hint SavedHint = (Hint)b.DataContext;
             SavedHint.Update();
+        }
+        private void DataAvailableEvent(object sender, WaveInEventArgs e)
+        {
+
         }
         public void AddHint()
         {
@@ -176,6 +178,36 @@ namespace voicio.ViewModels
             }
             HintsGridData.Selection = new TreeDataGridCellSelectionModel<Hint>(HintsGridData);
         }
+        public void StartVoiceSearch()
+        {
+            var microphone = new WaveInEvent()
+            {
+                WaveFormat = new WaveFormat(44100, 1)
+            };
+            microphone.DataAvailable += DataAvailableEvent;
+            microphone.StartRecording();
+            VoskRecognizer rec = new VoskRecognizer(model, 16000.0f);
+            rec.SetMaxAlternatives(0);
+            rec.SetWords(true);
+            using (Stream source = File.OpenRead(@"C:\Users\123\Downloads\test2.wav"))
+            {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    if (rec.AcceptWaveform(buffer, bytesRead))
+                    {
+                        Console.WriteLine(rec.Result());
+                    }
+                    else
+                    {
+                        Console.WriteLine(rec.PartialResult());
+                    }
+                }
+
+            }
+            Console.WriteLine($"Final Text: {rec.FinalResult()}");
+        }
         public void StartSearch()
         {
             using (var DataSource = new HelpContext())
@@ -199,6 +231,8 @@ namespace voicio.ViewModels
         public MainWindowViewModel()
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
+            StartVoiceSearchCommand = ReactiveCommand.Create(StartVoiceSearch);
+            HintsRows = new ObservableCollection<Hint>();
             TreeDataGridInit();
         }
     }
