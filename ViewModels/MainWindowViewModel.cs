@@ -12,9 +12,6 @@ using Avalonia.Controls.Templates;
 using DynamicData;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Vosk;
-using NAudio;
-using NAudio.Wave;
 using System.IO;
 using System;
 
@@ -113,10 +110,6 @@ namespace voicio.ViewModels
             Hint SavedHint = (Hint)b.DataContext;
             SavedHint.Update();
         }
-        private void DataAvailableEvent(object sender, WaveInEventArgs e)
-        {
-
-        }
         public void AddHint()
         {
             Hint NewHint = new Hint();
@@ -180,33 +173,7 @@ namespace voicio.ViewModels
         }
         public void StartVoiceSearch()
         {
-            var microphone = new WaveInEvent()
-            {
-                WaveFormat = new WaveFormat(44100, 1)
-            };
-            microphone.DataAvailable += DataAvailableEvent;
-            microphone.StartRecording();
-            VoskRecognizer rec = new VoskRecognizer(model, 16000.0f);
-            rec.SetMaxAlternatives(0);
-            rec.SetWords(true);
-            using (Stream source = File.OpenRead(@"C:\Users\123\Downloads\test2.wav"))
-            {
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    if (rec.AcceptWaveform(buffer, bytesRead))
-                    {
-                        Console.WriteLine(rec.Result());
-                    }
-                    else
-                    {
-                        Console.WriteLine(rec.PartialResult());
-                    }
-                }
-
-            }
-            Console.WriteLine($"Final Text: {rec.FinalResult()}");
+            var rec = NAudioRecorder();
         }
         public void StartSearch()
         {
