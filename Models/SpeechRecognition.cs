@@ -15,9 +15,9 @@ namespace voicio.Models
         private VoskRecognizer rec;
         public string Recognize(byte[] buffer)
         {
-            using (Stream source = File.OpenRead("test.wav"))
+            using (MemoryStream source = new MemoryStream(buffer))
             {
-                byte[] buffer = new byte[4096];
+                //byte[] buffer = new byte[4096];
                 int bytesRead;
                 while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
                 {
@@ -33,7 +33,8 @@ namespace voicio.Models
             }
             return rec.FinalResult();
         }
-        public SpeechRecognition(Model model) {
+        public SpeechRecognition(string modelpath) {
+            Model model = new Model(modelpath);
             rec = new VoskRecognizer(model, 16000.0f);
             rec.SetMaxAlternatives(0);
             rec.SetWords(true);

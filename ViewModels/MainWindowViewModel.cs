@@ -173,7 +173,8 @@ namespace voicio.ViewModels
         }
         public void StartVoiceSearch()
         {
-            var rec = NAudioRecorder();
+            var recorder = new NAudioRecorder();
+            var recognition = new SpeechRecognition(".\\voice_model");
         }
         public void StartSearch()
         {
