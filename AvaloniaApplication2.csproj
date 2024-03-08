@@ -10,6 +10,10 @@
     <AssemblyName>voicio</AssemblyName>
 	<DisableWinExeOutputInference>true</DisableWinExeOutputInference>
 	<AvaloniaXamlIlDebuggerLaunch>false</AvaloniaXamlIlDebuggerLaunch>
+	<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+	<PublishTrimmed>true</PublishTrimmed>
+	<PublishSingleFile>true</PublishSingleFile>
+	<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
 
   <ItemGroup>
