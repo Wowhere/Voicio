@@ -3,6 +3,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using voicio.ViewModels;
 using voicio.Views;
+using Microsoft.EntityFrameworkCore;
+using voicio.Models;
 
 namespace voicio
 {
@@ -15,6 +17,8 @@ namespace voicio
 
         public override void OnFrameworkInitializationCompleted()
         {
+            var tempdb = new HelpContext();
+            tempdb.Database.EnsureCreatedAsync();
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainWindow

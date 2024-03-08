@@ -32,7 +32,7 @@ namespace voicio.Models
             return waveProvider.Read(buffer, offset, count);
         }
         public NAudioRecorder() {
-            var microphone = new WaveInEvent()
+            microphone = new WaveInEvent()
             {
                 WaveFormat = new WaveFormat(44100, 1)
             };
