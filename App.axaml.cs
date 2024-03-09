@@ -18,7 +18,7 @@ namespace voicio
         public override void OnFrameworkInitializationCompleted()
         {
             var tempdb = new HelpContext();
-            tempdb.Database.EnsureCreatedAsync();
+            tempdb.Database.EnsureCreatedAsync(); //create DB if no DB is found
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainWindow

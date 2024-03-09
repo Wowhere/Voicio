@@ -25,22 +25,24 @@ namespace voicio.ViewModels
             get => _HintsRows;
             set => this.RaiseAndSetIfChanged(ref _HintsRows, value);
         }
-
         private FlatTreeDataGridSource<Hint>? _HintsGridData;
-
         public FlatTreeDataGridSource<Hint>? HintsGridData
         {
             get => _HintsGridData;
             set => this.RaiseAndSetIfChanged(ref _HintsGridData, value);
         }
-
         private string _query;
         public string Query
         {
             get => _query;
             set => this.RaiseAndSetIfChanged(ref _query, value);
         }
-
+        private string? _StatusText;
+        public string? StatusText
+        {
+            get => _StatusText;
+            set => this.RaiseAndSetIfChanged(ref _StatusText, value);
+        }
         private bool _IsPinnedWindow = false;
         public bool IsPinnedWindow
         {
@@ -69,7 +71,6 @@ namespace voicio.ViewModels
             get => _IsTagSearch;
             set => this.RaiseAndSetIfChanged(ref _IsTagSearch, value);
         }
-
         public bool IsHighlighting
         {
             get => _IsHighlighting;
@@ -80,7 +81,6 @@ namespace voicio.ViewModels
             get => _IsFuzzy;
             set => this.RaiseAndSetIfChanged(ref _IsFuzzy, value);
         }
-
         public bool IsAddButtonVisible
         {
             get => _IsAddButtonVisible;
@@ -132,18 +132,19 @@ namespace voicio.ViewModels
             b.Click += RemoveHint;
             return b;
         }
-        
         public void TreeDataGridInit()
         {
+            var ColumnLength = new GridLength(1, GridUnitType.Star);
             if (IsGridEditable)
             {
                 var EditOptions = new TextColumnOptions<Hint>
                 {
                     BeginEditGestures = BeginEditGestures.Tap,
                     IsTextSearchEnabled = true,
+                    
                 };
-                TextColumn<Hint, string> HintTextColumn = new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v, options: EditOptions);
-                TextColumn<Hint, string> HintCommentColumn = new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v, options: EditOptions);
+                TextColumn<Hint, string> HintTextColumn = new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v, options: EditOptions, width: ColumnLength);
+                TextColumn<Hint, string> HintCommentColumn = new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v, options: EditOptions, width: ColumnLength);
                 HintsGridData = new FlatTreeDataGridSource<Hint>(HintsRows)
                 {
                     Columns =
@@ -162,8 +163,8 @@ namespace voicio.ViewModels
                 {
                     Columns =
                     {
-                        new TextColumn<Hint, string>("Text", x => x.HintText),
-                        new TextColumn<Hint, string>("Comment", x => x.Comment)
+                        new TextColumn<Hint, string>("Text", x => x.HintText, width: ColumnLength),
+                        new TextColumn<Hint, string>("Comment", x => x.Comment, width: ColumnLength)
                     },
                 };
                 IsAddButtonVisible = false;
