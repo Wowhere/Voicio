@@ -132,9 +132,20 @@ namespace voicio.ViewModels
             b.Click += RemoveHint;
             return b;
         }
+        private DockPanel ButtonsPanelInit()
+        {
+            var panel = new DockPanel();
+            panel.Children.Add(SaveButtonInit());
+            panel.Children.Add(RemoveButtonInit());
+            panel.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
+            return panel;
+        }
+
         public void TreeDataGridInit()
         {
-            var ColumnLength = new GridLength(1, GridUnitType.Star);
+            var TextColumnLength = new GridLength(1, GridUnitType.Star);
+            var TemplateColumnLength = new GridLength(0.4, GridUnitType.Star);
+
             if (IsGridEditable)
             {
                 var EditOptions = new TextColumnOptions<Hint>
@@ -143,16 +154,17 @@ namespace voicio.ViewModels
                     IsTextSearchEnabled = true,
                     
                 };
-                TextColumn<Hint, string> HintTextColumn = new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v, options: EditOptions, width: ColumnLength);
-                TextColumn<Hint, string> HintCommentColumn = new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v, options: EditOptions, width: ColumnLength);
+                TextColumn<Hint, string> HintTextColumn = new TextColumn<Hint, string>("Text", x => x.HintText, (r, v) => r.HintText = v, options: EditOptions, width: TextColumnLength);
+                TextColumn<Hint, string> HintCommentColumn = new TextColumn<Hint, string>("Comment", x => x.Comment, (r, v) => r.Comment = v, options: EditOptions, width: TextColumnLength);
                 HintsGridData = new FlatTreeDataGridSource<Hint>(HintsRows)
                 {
                     Columns =
                     {
                         HintTextColumn,
                         HintCommentColumn,
-                        new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => SaveButtonInit(), supportsRecycling: true)),
-                        new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => RemoveButtonInit(), supportsRecycling: true))
+                        new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => ButtonsPanelInit(), supportsRecycling: true), width: TemplateColumnLength),
+                        //new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => SaveButtonInit(), supportsRecycling: true), width: TemplateColumnLength),
+                        //new TemplateColumn<Hint>("", new FuncDataTemplate<Hint>((a, e) => RemoveButtonInit(), supportsRecycling: true), width: TemplateColumnLength)
                     },
                 };
                 IsAddButtonVisible = true;
@@ -163,8 +175,8 @@ namespace voicio.ViewModels
                 {
                     Columns =
                     {
-                        new TextColumn<Hint, string>("Text", x => x.HintText, width: ColumnLength),
-                        new TextColumn<Hint, string>("Comment", x => x.Comment, width: ColumnLength)
+                        new TextColumn<Hint, string>("Text", x => x.HintText, width: TextColumnLength),
+                        new TextColumn<Hint, string>("Comment", x => x.Comment, width: TextColumnLength)
                     },
                 };
                 IsAddButtonVisible = false;
