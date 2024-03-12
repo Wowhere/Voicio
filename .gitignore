@@ -30,3 +30,17 @@ Views/MainWindow.axaml.cs
 AvaloniaApplication2.csproj
 .vs/AvaloniaApplication2/v17/TestStore/0/000.testlog
 .vs/AvaloniaApplication2/v17/TestStore/0/testlog.manifest
+bin/Debug/net6.0/voice_model/am/final.mdl
+bin/Debug/net6.0/voice_model/conf/mfcc.conf
+bin/Debug/net6.0/voice_model/conf/model.conf
+bin/Debug/net6.0/voice_model/graph/disambig_tid.int
+bin/Debug/net6.0/voice_model/graph/Gr.fst
+bin/Debug/net6.0/voice_model/graph/HCLr.fst
+bin/Debug/net6.0/voice_model/graph/phones/word_boundary.int
+bin/Debug/net6.0/voice_model/ivector/final.dubm
+bin/Debug/net6.0/voice_model/ivector/final.ie
+bin/Debug/net6.0/voice_model/ivector/final.mat
+bin/Debug/net6.0/voice_model/ivector/global_cmvn.stats
+bin/Debug/net6.0/voice_model/ivector/online_cmvn.conf
+bin/Debug/net6.0/voice_model/ivector/splice.conf
+bin/Debug/net6.0/voice_model/README

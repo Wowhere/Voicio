@@ -2,7 +2,6 @@
 using voicio.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
@@ -12,8 +11,9 @@ using Avalonia.Controls.Templates;
 using DynamicData;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using System.IO;
+using System.Threading.Tasks;
 using System;
+using System.Reactive;
 
 namespace voicio.ViewModels
 {
@@ -95,8 +95,8 @@ namespace voicio.ViewModels
                 TreeDataGridInit();
             }
         }
-        public ICommand StartSearchCommand { get; }
-        public ICommand StartVoiceSearchCommand { get; }
+        public ReactiveCommand<Unit, Unit> StartSearchCommand { get; }
+        public ReactiveCommand<Unit, Unit> StartVoiceSearchCommand { get; }
         private void RemoveHint(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
@@ -140,7 +140,6 @@ namespace voicio.ViewModels
             panel.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
             return panel;
         }
-
         public void TreeDataGridInit()
         {
             var TextColumnLength = new GridLength(1, GridUnitType.Star);
@@ -184,10 +183,16 @@ namespace voicio.ViewModels
             }
             HintsGridData.Selection = new TreeDataGridCellSelectionModel<Hint>(HintsGridData);
         }
-        public void StartVoiceSearch()
+        public async Task StartVoiceSearch()
         {
             var recorder = new NAudioRecorder();
+            await recorder.StartRecord();
+            //recorder.StopRecord();
+            var temp_speech_buf = recorder.GetByteArray();
             var recognition = new SpeechRecognition(".\\voice_model");
+            Query = recognition.Recognize(temp_speech_buf);
+            Console.WriteLine(Query);
+            StartSearch();
         }
         public void StartSearch()
         {
@@ -208,11 +213,10 @@ namespace voicio.ViewModels
             }
             TreeDataGridInit();
         }
-
         public MainWindowViewModel()
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
-            StartVoiceSearchCommand = ReactiveCommand.Create(StartVoiceSearch);
+            StartVoiceSearchCommand = ReactiveCommand.CreateFromTask(StartVoiceSearch);
             HintsRows = new ObservableCollection<Hint>();
             TreeDataGridInit();
         }

@@ -14,7 +14,6 @@ namespace voicio
         {
             AvaloniaXamlLoader.Load(this);
         }
-
         public override void OnFrameworkInitializationCompleted()
         {
             var tempdb = new HelpContext();
@@ -26,7 +25,6 @@ namespace voicio
                     DataContext = new MainWindowViewModel(),
                 };
             }
-
             base.OnFrameworkInitializationCompleted();
         }
     }

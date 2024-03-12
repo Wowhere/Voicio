@@ -4,40 +4,58 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Timers;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace voicio.Models
 {
     public class NAudioRecorder
     {
-        private WaveInEvent microphone;
+        private WaveInEvent Microphone;
         private bool IsRecording = false;
-        private BufferedWaveProvider waveProvider;
+        private BufferedWaveProvider WaveProvider;
+        private Timer RecordTimer;
         private void DataAvailableEvent(object sender, WaveInEventArgs e)
         {
-            waveProvider.AddSamples(e.Buffer, 0, e.BytesRecorded);
+            WaveProvider.AddSamples(e.Buffer, 0, e.Buffer.Length);
         }
-        public void Record()
+        //private void OnRecordingStopped(object sender, StoppedEventArgs e)
+        //{
+        //    Microphone.Dispose();
+        //    Microphone = null;
+        //    RecordTimer.Dispose();
+        //    RecordTimer = null;
+        //}
+        public async Task StartRecord()
         {
             IsRecording = true;
-            microphone.StartRecording();
+            Microphone.StartRecording();
+            RecordTimer = new Timer(5000);
+            RecordTimer.Elapsed += (sender,e) => StopRecord();
+            RecordTimer.AutoReset = false;
+            RecordTimer.Start();
         }
-        public void Stop()
+        public void StopRecord()
         {
             IsRecording = false;
-            microphone.StopRecording();
+            Microphone.StopRecording();
         }
-        public int GetByteArray(byte[] buffer, int offset, int count)
+        public byte[] GetByteArray()
         {
-            return waveProvider.Read(buffer, offset, count);
+            var buffer = new byte[] { };
+            //var stream = new MemoryStream(WaveProvider.Read);
+            var i = WaveProvider.Read(buffer, 0, WaveProvider.BufferedBytes);
+            return buffer;
         }
         public NAudioRecorder() {
-            microphone = new WaveInEvent()
+            Microphone = new WaveInEvent()
             {
                 WaveFormat = new WaveFormat(44100, 1)
             };
-            microphone.DataAvailable += DataAvailableEvent;
-            waveProvider = new BufferedWaveProvider(microphone.WaveFormat);
+            Microphone.DataAvailable += DataAvailableEvent;
+            //Microphone.RecordingStopped += OnRecordingStopped;
+            WaveProvider = new BufferedWaveProvider(Microphone.WaveFormat);
         }
     }
 }
