@@ -1,14 +1,7 @@
-﻿using NAudio;
-using NAudio.Wave;
-using Vosk;
+﻿using NAudio.Wave;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Timers;
-using System.Threading.Tasks;
 using System.IO;
-using Avalonia;
 
 namespace voicio.Models
 {
@@ -17,10 +10,10 @@ namespace voicio.Models
     private WaveInEvent Microphone;
     private bool IsRecording = false;
     //private BufferedWaveProvider bufferedWaveProvider;
-    private WaveFileWriter CustomWaveProvider;
+    private static WaveFileWriter CustomWaveProvider;
     private System.Timers.Timer RecordTimer;
     private MemoryStream CustomStream;
-    private void DataAvailableEvent(object sender, WaveInEventArgs e)
+    private static void DataAvailableEvent(object sender, WaveInEventArgs e)
     {
         CustomWaveProvider.Write(e.Buffer, 0, e.BytesRecorded);
         
