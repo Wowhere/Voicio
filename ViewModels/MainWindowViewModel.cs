@@ -183,10 +183,12 @@ namespace voicio.ViewModels
             }
             HintsGridData.Selection = new TreeDataGridCellSelectionModel<Hint>(HintsGridData);
         }
-        public async Task StartVoiceSearch()
+        //public async Task StartVoiceSearch()
+        public void StartVoiceSearch()
         {
             var recorder = new NAudioRecorder();
-            await recorder.StartRecord();
+            //await recorder.StartRecord();
+            recorder.StartRecord();
             //recorder.StopRecord();
             var temp_speech_buf = recorder.GetByteArray();
             var recognition = new SpeechRecognition(".\\voice_model");
@@ -216,7 +218,8 @@ namespace voicio.ViewModels
         public MainWindowViewModel()
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
-            StartVoiceSearchCommand = ReactiveCommand.CreateFromTask(StartVoiceSearch);
+            StartVoiceSearchCommand = ReactiveCommand.Create(StartVoiceSearch);
+            //StartVoiceSearchCommand = ReactiveCommand.CreateFromTask(StartVoiceSearch);
             HintsRows = new ObservableCollection<Hint>();
             TreeDataGridInit();
         }
