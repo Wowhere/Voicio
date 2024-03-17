@@ -10,13 +10,12 @@ namespace voicio.Models
     private WaveInEvent Microphone;
     private bool IsRecording = false;
     //private BufferedWaveProvider bufferedWaveProvider;
-    private static WaveFileWriter CustomWaveProvider;
+    private WaveFileWriter CustomWaveProvider;
     private System.Timers.Timer RecordTimer;
     private MemoryStream CustomStream;
-    private static void DataAvailableEvent(object sender, WaveInEventArgs e)
+    private void DataAvailableEvent(object sender, WaveInEventArgs e)
     {
         CustomWaveProvider.Write(e.Buffer, 0, e.BytesRecorded);
-        
     }
     //private void OnRecordingStopped(object sender, StoppedEventArgs e)
     //{
@@ -30,15 +29,12 @@ namespace voicio.Models
     {
         IsRecording = true;
         Microphone.StartRecording();
-        RecordTimer = new System.Timers.Timer(5000);
-        RecordTimer.Elapsed += new ElapsedEventHandler(StopRecord);
-        RecordTimer.Start();
     }
-    public void StopRecord(object sender, EventArgs e)
+    public void StopRecord()
     {
         IsRecording = false;
         Microphone.StopRecording();
-        RecordTimer.Dispose();
+        //RecordTimer.Dispose();
         //Console.WriteLine(e);
     }
     public byte[] GetByteArray()

@@ -11,14 +11,16 @@ using Avalonia.Controls.Templates;
 using DynamicData;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using System.Threading.Tasks;
+using System.Timers;
 using System;
 using System.Reactive;
+using System.Diagnostics;
 
 namespace voicio.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private NAudioRecorder recorder;
         private ObservableCollection<Hint>? _HintsRows;
         public ObservableCollection<Hint>? HintsRows
         {
@@ -56,10 +58,25 @@ namespace voicio.ViewModels
         private bool _IsGridEditable = false;
         private bool _IsAddButtonVisible = false;
         private bool _IsHighlighting = false;
+        private bool _IsVoiceSearching = false;
         public bool IsTextSearch
         {
             get => _IsTextSearch;
             set => this.RaiseAndSetIfChanged(ref _IsTextSearch, value);
+        }
+        public bool IsVoiceSearching
+        {
+            get => _IsVoiceSearching;
+            set 
+            { 
+                if (_IsVoiceSearching) {
+                    StartVoiceSearch();
+                } else
+                {
+                    StopVoiceSearch();
+                }
+                this.RaiseAndSetIfChanged(ref _IsVoiceSearching, value);
+            }
         }
         public bool IsCommentSearch
         {
@@ -184,17 +201,27 @@ namespace voicio.ViewModels
             HintsGridData.Selection = new TreeDataGridCellSelectionModel<Hint>(HintsGridData);
         }
         //public async Task StartVoiceSearch()
-        public void StartVoiceSearch()
+        public void StopVoiceSearch()
         {
-            var recorder = new NAudioRecorder();
-            //await recorder.StartRecord();
-            recorder.StartRecord();
-            //recorder.StopRecord();
+            recorder.StopRecord();
             var temp_speech_buf = recorder.GetByteArray();
             var recognition = new SpeechRecognition(".\\voice_model");
             Query = recognition.Recognize(temp_speech_buf);
             Console.WriteLine(Query);
             StartSearch();
+        }
+        public void StartVoiceSearch()
+        {
+            recorder = new NAudioRecorder();
+            //var timer = new System.Timers.Timer(15000);
+            //timer.Elapsed += new ElapsedEventHandler(recorder.StopRecord);
+            //timer.Enabled = true;
+            //timer.SynchronizingObject = HintsRows;
+            //timer.Start();
+            recorder.StartRecord();
+            //recorder.StopRecord();
+            
+            
         }
         public void StartSearch()
         {
