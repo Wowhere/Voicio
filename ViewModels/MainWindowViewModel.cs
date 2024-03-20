@@ -3,6 +3,7 @@ using voicio.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Avalonia.Threading;
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
 //using System.Speech;
@@ -15,6 +16,7 @@ using System.Timers;
 using System;
 using System.Reactive;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace voicio.ViewModels
 {
@@ -114,6 +116,17 @@ namespace voicio.ViewModels
         }
         public ReactiveCommand<Unit, Unit> StartSearchCommand { get; }
         public ReactiveCommand<Unit, Unit> StartVoiceSearchCommand { get; }
+        public async Task PerformVoiceSearch()
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                recorder = new NAudioRecorder();
+                recorder.StartRecord();
+            });
+            await tcs.Task;
+        }
         private void RemoveHint(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
