@@ -17,12 +17,16 @@ using System;
 using System.Reactive;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace voicio.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
         private NAudioRecorder recorder;
+        private System.Timers.Timer RecordTimer;
+        private TaskCompletionSource<bool> voiceSearchTask;
         private ObservableCollection<Hint>? _HintsRows;
         public ObservableCollection<Hint>? HintsRows
         {
@@ -66,20 +70,25 @@ namespace voicio.ViewModels
             get => _IsTextSearch;
             set => this.RaiseAndSetIfChanged(ref _IsTextSearch, value);
         }
-        public bool IsVoiceSearching
-        {
-            get => _IsVoiceSearching;
-            set 
-            { 
-                if (_IsVoiceSearching) {
-                    StartVoiceSearch();
-                } else
-                {
-                    StopVoiceSearch();
-                }
-                this.RaiseAndSetIfChanged(ref _IsVoiceSearching, value);
-            }
-        }
+        //public bool IsVoiceSearching
+        //{
+
+        //    //get => _IsVoiceSearching;
+        //    //set 
+        //    //{ 
+        //    //    if (_IsVoiceSearching) {
+        //    //            CancellationTokenSource cts = new CancellationTokenSource();
+        //    //            PerformVoiceSearch(cts).ContinueWith(t => {
+        //    //            cts.
+        //    //        });
+
+        //    //    } else
+        //    //    {
+        //    //        StopVoiceSearch();
+        //    //    }
+        //    //    this.RaiseAndSetIfChanged(ref _IsVoiceSearching, value);
+        //    //}
+        //}
         public bool IsCommentSearch
         {
             get => _IsCommentSearch;
@@ -116,16 +125,30 @@ namespace voicio.ViewModels
         }
         public ReactiveCommand<Unit, Unit> StartSearchCommand { get; }
         public ReactiveCommand<Unit, Unit> StartVoiceSearchCommand { get; }
-        public async Task PerformVoiceSearch()
+        public void StartVoiceSearch()
         {
-            var tcs = new TaskCompletionSource<bool>();
-
-            await Dispatcher.UIThread.InvokeAsync(() =>
+            if (!_IsVoiceSearching)
             {
-                recorder = new NAudioRecorder();
-                recorder.StartRecord();
-            });
-            await tcs.Task;
+                _IsVoiceSearching = true;
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    recorder = new NAudioRecorder();
+                    recorder.StartRecord();
+                });
+            } else
+            {
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    recorder.StopRecord();
+                    var temp_speech_buf = recorder.GetByteArray();
+                    var recognition = new SpeechRecognition(".\\voice_model");
+                    Query = recognition.Recognize(temp_speech_buf);
+                });
+                Console.WriteLine(Query);
+                StartSearch();
+                _IsVoiceSearching = false;
+                
+            }
         }
         private void RemoveHint(object sender, RoutedEventArgs e)
         {
@@ -223,19 +246,7 @@ namespace voicio.ViewModels
             Console.WriteLine(Query);
             StartSearch();
         }
-        public void StartVoiceSearch()
-        {
-            recorder = new NAudioRecorder();
-            //var timer = new System.Timers.Timer(15000);
-            //timer.Elapsed += new ElapsedEventHandler(recorder.StopRecord);
-            //timer.Enabled = true;
-            //timer.SynchronizingObject = HintsRows;
-            //timer.Start();
-            recorder.StartRecord();
-            //recorder.StopRecord();
-            
-            
-        }
+
         public void StartSearch()
         {
             using (var DataSource = new HelpContext())
@@ -258,8 +269,8 @@ namespace voicio.ViewModels
         public MainWindowViewModel()
         {
             StartSearchCommand = ReactiveCommand.Create(StartSearch);
-            StartVoiceSearchCommand = ReactiveCommand.Create(StartVoiceSearch);
             //StartVoiceSearchCommand = ReactiveCommand.CreateFromTask(StartVoiceSearch);
+            StartVoiceSearchCommand = ReactiveCommand.Create(StartVoiceSearch);
             HintsRows = new ObservableCollection<Hint>();
             TreeDataGridInit();
         }

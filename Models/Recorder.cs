@@ -1,6 +1,5 @@
 ﻿using NAudio.Wave;
 using System;
-using System.Timers;
 using System.IO;
 
 namespace voicio.Models
@@ -9,22 +8,12 @@ namespace voicio.Models
 {
     private WaveInEvent Microphone;
     private bool IsRecording = false;
-    //private BufferedWaveProvider bufferedWaveProvider;
     private WaveFileWriter CustomWaveProvider;
-    private System.Timers.Timer RecordTimer;
     private MemoryStream CustomStream;
     private void DataAvailableEvent(object sender, WaveInEventArgs e)
     {
         CustomWaveProvider.Write(e.Buffer, 0, e.BytesRecorded);
     }
-    //private void OnRecordingStopped(object sender, StoppedEventArgs e)
-    //{
-    //    Microphone.Dispose();
-    //    Microphone = null;
-    //    RecordTimer.Dispose();
-    //    RecordTimer = null;
-    //}
-    //public async Task StartRecord()
     public void StartRecord()
     {
         IsRecording = true;
